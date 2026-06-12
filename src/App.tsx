@@ -10,6 +10,7 @@ import { BarberCarousel } from './components/BarberCarousel';
 import { AdminPanel } from './components/AdminPanel';
 import { BlogPage } from './components/BlogPage';
 import { navigateTo } from './navigation';
+import { assetUrl } from './assetUrl';
 import {
   SERVICES as DEFAULT_SERVICES,
   BRANCHES,
@@ -28,7 +29,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   brandSubtitle: 'Premium Grooming. Redefined Masculinity.',
   heroTitle: 'Craft Your Identity With Precision',
   heroSubtitle: 'Experience elite barbering at Adonis Men’s Grooming, where modern style meets timeless perfection in the heart of Dhaka.',
-  heroBg: '/assets/images/adonis_executive_lounge_1779270704894.png',
+  heroBg: assetUrl('/assets/images/adonis_executive_lounge_1779270704894.png'),
   aboutStory: 'Adonis Men’s Grooming is a premium barbershop brand in Dhaka dedicated to redefining modern masculinity through precision grooming, luxury service, and personalized styling. Every cut, shave, and treatment is designed to elevate confidence and identity.',
   aboutDescription: 'We believe that grooming is not merely a transaction—it represents a curated ritual of premium transition. Nestled in Dhaka’s premier neighborhoods, Adonis pairs classic European barber heritage with high-end, contemporary Dubai hotel-standard lounge accommodations. From the selection of our premium organic grooming balms to the exact temperature parameters of our steaming mint towels, every detail is meticulously orchestrated to deliver perfection.',
   contactEmail: 'info@adonis.com.bd',
@@ -135,12 +136,12 @@ export default function App() {
   }, [featuredHover]);
 
   const AMENITIES = [
-    { title: 'Executive Lounge', desc: 'Leather chesterfield sofas, ambient gold lighting, and complimentary barista coffee.', img: '/assets/images/executive.png' },
-    { title: 'Reception', desc: 'Premium reception area with a luxurious waiting lounge, warm lighting, elegant seating, and a welcoming ambiance for every Adonis guest.', img: '/assets/images/reception.png' },
-    { title: 'Massage Room', desc: 'Private therapy suites with aromatherapy diffusers and heated beds for deep tissue relief.', img: '/assets/images/massage.png' },
-    { title: 'Sauna & Steam', desc: 'Finnish dry sauna and Turkish-style steam chambers for deep pore detoxification and muscular unwind.', img: '/assets/images/steam.png' },
-    { title: 'Jacuzzi Bath', desc: 'Hydrotherapy jacuzzi with chromotherapy lighting, water jets, and essential oil infusion for the ultimate soak.', img: '/assets/images/sauana.png' },
-    { title: 'VIP Private Room', desc: 'Soundproofed suite with personal butler service, entertainment system, and dedicated master barber.', img: '/assets/images/vip.png' }
+    { title: 'Executive Lounge', desc: 'Leather chesterfield sofas, ambient gold lighting, and complimentary barista coffee.', img: assetUrl('/assets/images/executive.png') },
+    { title: 'Reception', desc: 'Premium reception area with a luxurious waiting lounge, warm lighting, elegant seating, and a welcoming ambiance for every Adonis guest.', img: assetUrl('/assets/images/reception.png') },
+    { title: 'Massage Room', desc: 'Private therapy suites with aromatherapy diffusers and heated beds for deep tissue relief.', img: assetUrl('/assets/images/massage.png') },
+    { title: 'Sauna & Steam', desc: 'Finnish dry sauna and Turkish-style steam chambers for deep pore detoxification and muscular unwind.', img: assetUrl('/assets/images/steam.png') },
+    { title: 'Jacuzzi Bath', desc: 'Hydrotherapy jacuzzi with chromotherapy lighting, water jets, and essential oil infusion for the ultimate soak.', img: assetUrl('/assets/images/sauana.png') },
+    { title: 'VIP Private Room', desc: 'Soundproofed suite with personal butler service, entertainment system, and dedicated master barber.', img: assetUrl('/assets/images/vip.png') }
   ];
 
   // Fetch data from Express backend
@@ -151,11 +152,15 @@ export default function App() {
       const data = await res.json();
       if (data) {
         if (data.services && data.services.length > 0) setServices(data.services);
-        if (data.barbers && data.barbers.length > 0) setBarbers(data.barbers);
-        if (data.settings) setSettings(data.settings);
+        if (data.barbers && data.barbers.length > 0) {
+          setBarbers(data.barbers.map((barber: Barber) => ({ ...barber, portraitUrl: assetUrl(barber.portraitUrl) })));
+        }
+        if (data.settings) setSettings({ ...data.settings, heroBg: assetUrl(data.settings.heroBg) });
         if (data.smtp) setSmtp(data.smtp);
         if (data.bookings) setBookings(data.bookings);
-        if (data.blogs && data.blogs.length > 0) setBlogs(data.blogs);
+        if (data.blogs && data.blogs.length > 0) {
+          setBlogs(data.blogs.map((blog: BlogPost) => ({ ...blog, coverImage: assetUrl(blog.coverImage) })));
+        }
       }
     } catch (err) {
       console.warn("Backend API not running. Working in standalone frontend client mode with fallback mock parameters.");
@@ -540,7 +545,7 @@ export default function App() {
           ref={servicesBgRef}
           className="absolute inset-y-[-6%] left-1/2 w-[100vw] bg-cover bg-center bg-no-repeat opacity-[0.34] pointer-events-none"
           style={{
-            backgroundImage: `url('/assets/images/adonis_styling_chairs_1779270725139.png')`,
+            backgroundImage: `url('${assetUrl('/assets/images/adonis_styling_chairs_1779270725139.png')}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -834,7 +839,7 @@ export default function App() {
           ref={vipBgRef}
           className="absolute inset-y-[-6%] left-1/2 w-[100vw] bg-cover bg-center bg-no-repeat opacity-[0.38] pointer-events-none"
           style={{
-            backgroundImage: `url('/assets/images/vip.png')`,
+            backgroundImage: `url('${assetUrl('/assets/images/vip.png')}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',

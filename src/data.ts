@@ -1,63 +1,64 @@
 import { Service, Branch, Barber, Testimonial, BlogPost } from './types';
+import { assetUrl } from './assetUrl';
 
 // Images are served from public/assets/images
 export const IMAGES = {
-  logo: '/assets/images/adonis_logo_1779270678761.png',
-  heroBg: '/assets/images/adonis_executive_lounge_1779270704894.png',
-  barberPortrait: '/assets/images/master_barber_portrait_1779269169728.png',
-  shaveAction: '/assets/images/hot_towel_shave_1779269193622.png',
-  shaveBg: '/assets/images/hot_towel_shave_1779269193622.png',
-  loungeChairs: '/assets/images/adonis_styling_chairs_1779270725139.png',
+  logo: assetUrl('/assets/images/adonis_logo_1779270678761.png'),
+  heroBg: assetUrl('/assets/images/adonis_executive_lounge_1779270704894.png'),
+  barberPortrait: assetUrl('/assets/images/master_barber_portrait_1779269169728.png'),
+  shaveAction: assetUrl('/assets/images/hot_towel_shave_1779269193622.png'),
+  shaveBg: assetUrl('/assets/images/hot_towel_shave_1779269193622.png'),
+  loungeChairs: assetUrl('/assets/images/adonis_styling_chairs_1779270725139.png'),
 
   // High quality Unsplash placeholder images matching luxury barbershops
   gallery: [
     {
-      url: '/assets/images/adonis_executive_lounge_1779270704894.png',
+      url: assetUrl('/assets/images/adonis_executive_lounge_1779270704894.png'),
       title: 'Adonis Executive Lounge',
       subtitle: 'Dhaka\'s premium space & Master Barbers'
     },
     {
-      url: '/assets/images/adonis_styling_chairs_1779270725139.png',
+      url: assetUrl('/assets/images/adonis_styling_chairs_1779270725139.png'),
       title: 'Elite Styling Suite',
       subtitle: 'Bespoke design, gold frames & custom details'
     },
     {
-      url: '/assets/images/master_barber_portrait_1779269169728.png',
+      url: assetUrl('/assets/images/master_barber_portrait_1779269169728.png'),
       title: 'Precision Styling & Cuts',
       subtitle: 'Elite Men Haircuts and Texturizing'
     },
     {
-      url: '/assets/images/hot_towel_shave_1779269193622.png',
+      url: assetUrl('/assets/images/hot_towel_shave_1779269193622.png'),
       title: 'Royal Straight Razor Shave',
       subtitle: 'Traditional lathering and steaming'
     },
     {
-      url: '/assets/images/luxury_barbershop_interior_1779269147619.png',
+      url: assetUrl('/assets/images/luxury_barbershop_interior_1779269147619.png'),
       title: 'Luxury Barbershop Interior',
       subtitle: 'Premium styling bays and ambient lighting'
     },
     {
-      url: '/assets/images/executive.png',
+      url: assetUrl('/assets/images/executive.png'),
       title: 'Executive Lounge Reception',
       subtitle: 'Leather chesterfield sofas and barista coffee'
     },
     {
-      url: '/assets/images/reception.png',
+      url: assetUrl('/assets/images/reception.png'),
       title: 'VIP Reception Area',
       subtitle: 'Warm lighting and elegant premium reception'
     },
     {
-      url: '/assets/images/vip.png',
+      url: assetUrl('/assets/images/vip.png'),
       title: 'VIP Private Suite',
       subtitle: 'Soundproofed suite with personal butler service'
     },
     {
-      url: '/assets/images/steam.png',
+      url: assetUrl('/assets/images/steam.png'),
       title: 'Steam & Sauna Chamber',
       subtitle: 'Turkish-style steam chambers for deep detox'
     },
     {
-      url: '/assets/images/sauana.png',
+      url: assetUrl('/assets/images/sauana.png'),
       title: 'Jacuzzi Hydrotherapy Bath',
       subtitle: 'Chromotherapy lighting and essential oil infusion'
     }
@@ -168,7 +169,7 @@ export const BARBERS: Barber[] = [
     name: 'Babul Chandra Shil',
     experienceYears: 12,
     specialty: 'Skin Fade & Modern Texturizing',
-    portraitUrl: '/assets/images/babul_barbar.png',
+    portraitUrl: assetUrl('/assets/images/babul_barbar.png'),
     bio: 'Renowned stylist with 12 years of craftsmanship. Expert in razor fades and sculpting bold executive silhouettes.',
     rating: 4.9
   },
@@ -177,7 +178,7 @@ export const BARBERS: Barber[] = [
     name: 'Antor Mondol',
     experienceYears: 9,
     specialty: 'Royal Shaves & Beard Architecture',
-    portraitUrl: '/assets/images/master_barber_portrait_1779269169728.png',
+    portraitUrl: assetUrl('/assets/images/master_barber_portrait_1779269169728.png'),
     bio: 'A true maestro of the straight razor, specialized in symmetrical beard mapping and hot towel restoration.',
     rating: 5.0
   },
@@ -186,7 +187,7 @@ export const BARBERS: Barber[] = [
     name: 'Rofiqul Islam',
     experienceYears: 7,
     specialty: 'Classic Scissor Cuts & Scalp Health',
-    portraitUrl: '/assets/images/rofiq_barbar.png',
+    portraitUrl: assetUrl('/assets/images/rofiq_barbar.png'),
     bio: 'Dedicated to traditional high-end scissor sculpting and therapeutic scalp treatments to promote long-term volume.',
     rating: 4.8
   },
@@ -195,7 +196,7 @@ export const BARBERS: Barber[] = [
     name: 'Chandra',
     experienceYears: 10,
     specialty: 'Hair Color & Keratin Treatments',
-    portraitUrl: '/assets/images/chandra.png',
+    portraitUrl: assetUrl('/assets/images/chandra.png'),
     bio: 'Color specialist with a decade of expertise in ammonia-free dye systems, keratin bonding, and high-fashion tone transformations.',
     rating: 4.9
   },
@@ -204,7 +205,7 @@ export const BARBERS: Barber[] = [
     name: 'Kalu Rupa Shil',
     experienceYears: 6,
     specialty: 'Facial Treatments & Spa Services',
-    portraitUrl: '/assets/images/kalu_rupa.png',
+    portraitUrl: assetUrl('/assets/images/kalu_rupa.png'),
     bio: 'Certified skin-care professional with advanced training in premium facials, body scrubs, and therapeutic massage techniques.',
     rating: 4.7
   },
@@ -213,7 +214,7 @@ export const BARBERS: Barber[] = [
     name: 'Saimon',
     experienceYears: 8,
     specialty: 'Massage Therapy & Body Spa',
-    portraitUrl: '/assets/images/saimon.png',
+    portraitUrl: assetUrl('/assets/images/saimon.png'),
     bio: 'Licensed massage therapist trained in Swedish, Deep Tissue, Thai and Aroma techniques. Known for his precision pressure-point therapy.',
     rating: 4.8
   },
@@ -222,7 +223,7 @@ export const BARBERS: Barber[] = [
     name: 'Dulal Chandra',
     experienceYears: 5,
     specialty: 'Modern Beard Styling & Waxing',
-    portraitUrl: '/assets/images/dulal_chandra.png',
+    portraitUrl: assetUrl('/assets/images/dulal_chandra.png'),
     bio: 'Young and passionate groomer specializing in contemporary beard shaping, wax-based styling, and precise razor-line finishes.',
     rating: 4.6
   }
@@ -261,7 +262,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: 'premium-mens-grooming-dhaka',
     title: 'Premium Men’s Grooming in Dhaka: The Adonis Guide to a Sharper Look',
     excerpt: 'Discover how professional haircuts, beard shaping, facials, massage, and premium salon care help modern men in Dhaka look sharper and feel more confident.',
-    coverImage: '/assets/images/adonis_styling_chairs_1779270725139.png',
+    coverImage: assetUrl('/assets/images/adonis_styling_chairs_1779270725139.png'),
     contentHtml: `
       <h2>Why Men’s Grooming Matters More Than Ever</h2>
       <p>Modern grooming is not only about looking polished. It is about confidence, hygiene, presentation, and personal identity. At <strong>Adonis Men’s Grooming in Dhaka</strong>, every service is designed to help men look sharp while enjoying a calm, premium salon experience.</p>

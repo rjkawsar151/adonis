@@ -27,10 +27,10 @@
     <script>
       window.__ADONIS_ASSET_BASE__ = @json(rtrim(request()->getBaseUrl(), '/'));
     </script>
-    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}" />
+    <link rel="stylesheet" href="{{ rtrim(request()->getBaseUrl(), '/') }}/build/assets/app.css" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="{{ asset('build/assets/app.js') }}"></script>
+    <script type="module" src="{{ rtrim(request()->getBaseUrl(), '/') }}/build/assets/app.js"></script>
   </body>
 </html>

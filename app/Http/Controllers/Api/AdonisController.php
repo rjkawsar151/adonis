@@ -204,7 +204,7 @@ class AdonisController extends Controller
             return response()->json(['success' => false, 'error' => 'No file uploaded'], 400);
         }
         $path = $request->file('portrait')->store('uploads', 'public_uploads');
-        return response()->json(['success' => true, 'url' => '/' . str_replace('\\', '/', $path)]);
+        return response()->json(['success' => true, 'url' => url('/' . str_replace('\\', '/', $path))]);
     }
 
     public function storeBooking(Request $request)
