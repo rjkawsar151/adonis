@@ -3,10 +3,10 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
   return {
     base: '/build/',
-    publicDir: false,
+    publicDir: command === 'build' ? false : 'public',
     plugins: [react(), tailwindcss()],
     build: {
       outDir: 'public/build',
