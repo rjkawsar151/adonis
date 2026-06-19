@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\WebsiteSetting;
 use App\Notifications\AppointmentNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,15 +14,19 @@ class AppointmentController extends Controller
 {
     public function store(Request $request)
     {
+        if ($request->has('email') && empty($request->email)) {
+            $request->merge(['email' => null]);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'phone' => [
                 'required',
                 'string',
-                'regex:/^(?:\+?88)?01[3-9]\d{8}$/' // Bangladesh phone validation
+                'regex:/^(?:\+?88)?01[3-9]\d{8}$/'
             ],
             'email' => 'nullable|email|max:255',
-            'service_id' => 'required|exists:services,id',
+            'service_id' => 'nullable|string|max:255',
             'preferred_date' => 'required|date|after_or_equal:today',
             'preferred_time' => 'required|string|max:50',
             'note' => 'nullable|string|max:1000',
@@ -40,7 +45,6 @@ class AppointmentController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Create the appointment
         $appointment = Appointment::create([
             'service_id' => $request->service_id,
             'name' => $request->name,
@@ -50,13 +54,14 @@ class AppointmentController extends Controller
             'preferred_time' => $request->preferred_time,
             'note' => $request->note,
             'status' => 'pending',
+            'branch_id' => $request->branch_id,
         ]);
 
-        // Send Email to Admin(s) via SMTP
         $settings = WebsiteSetting::first();
-        $adminEmails = $settings->smtp_mail_to ?? 'info@mayfair.com.bd';
+        $adminEmails = $settings->smtp_mail_to ?? 'info@adonis.com.bd';
 
-        // Support comma-separated notification emails
+        $this->configureMailer($settings);
+
         $notificationEmails = $settings->notification_emails
             ? array_map('trim', explode(',', $settings->notification_emails))
             : [$adminEmails];
@@ -69,7 +74,6 @@ class AppointmentController extends Controller
                 }
             }
 
-            // Send Confirmation to Patient if email provided
             if ($appointment->email) {
                 Notification::route('mail', $appointment->email)
                     ->notify(new AppointmentNotification($appointment, 'patient'));
@@ -88,5 +92,22 @@ class AppointmentController extends Controller
         }
 
         return back()->with('success', $msg);
+    }
+
+    private function configureMailer($settings): void
+    {
+        // Purge cached transport so new config is used immediately
+        Mail::purge('smtp');
+
+        config([
+            'mail.default' => 'smtp',
+            'mail.mailers.smtp.host'       => env('SMTP_HOST', $settings->smtp_host ?? ''),
+            'mail.mailers.smtp.port'       => (int) env('SMTP_PORT', $settings->smtp_port ?? 587),
+            'mail.mailers.smtp.encryption' => filter_var(env('SMTP_SECURE', $settings->smtp_encryption ?? false), FILTER_VALIDATE_BOOLEAN) ? 'ssl' : 'tls',
+            'mail.mailers.smtp.username'   => env('SMTP_USER', $settings->smtp_username ?? ''),
+            'mail.mailers.smtp.password'   => env('SMTP_PASS', $settings->smtp_password ?? ''),
+            'mail.from.address'            => env('SMTP_FROM_EMAIL', $settings->smtp_mail_to ?? ''),
+            'mail.from.name'               => 'Adonis Booking',
+        ]);
     }
 }

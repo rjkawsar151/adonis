@@ -234,7 +234,22 @@ class AdonisController extends Controller
             'createdAt' => now(),
         ]);
 
+        DB::table('appointments')->insert([
+            'service_id' => $booking['serviceId'] ?? '',
+            'name' => $booking['clientName'],
+            'phone' => $booking['clientPhone'],
+            'email' => $booking['clientEmail'] ?? '',
+            'preferred_date' => $booking['date'],
+            'preferred_time' => $booking['time'],
+            'note' => $booking['notes'] ?? '',
+            'branch_id' => $booking['branchId'],
+            'status' => 'pending',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         $emailSent = $this->sendBookingMail($booking);
+        \Illuminate\Support\Facades\Log::info('Booking stored, email sent: ' . ($emailSent ? 'yes' : 'no'));
         return response()->json(['success' => true, 'booking' => $booking, 'emailSent' => $emailSent]);
     }
 
@@ -260,10 +275,13 @@ class AdonisController extends Controller
     {
         $smtp = $this->runtimeSmtp();
         $this->configureMailer($smtp);
-        $target = $request->input('to') ?: $smtp['fromEmail'];
+        $targets = $request->input('to') ? [$request->input('to')] : array_filter(array_map('trim', explode(',', $smtp['adminEmails'])));
+        if (!$targets) $targets = [$smtp['fromEmail']];
         try {
-            Mail::raw('Adonis SMTP test email from Laravel.', fn ($message) => $message->to($target)->subject('Adonis SMTP Test'));
-            return response()->json(['success' => true, 'message' => 'SMTP test email sent.']);
+            foreach ($targets as $email) {
+                Mail::raw('Adonis SMTP test email from Laravel.', fn ($message) => $message->to($email)->subject('Adonis SMTP Test'));
+            }
+            return response()->json(['success' => true, 'message' => 'Test email sent to ' . implode(', ', $targets) . '.']);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 502);
         }
@@ -297,14 +315,32 @@ class AdonisController extends Controller
 
     private function runtimeSmtp(): array
     {
+        // Priority: env > cms_meta > website_settings
+        $cms = $this->meta('smtp', $this->defaultSmtp);
+
+        $ws = null;
+        try {
+            $ws = DB::table('website_settings')->where('id', 1)->first();
+        } catch (\Throwable) {
+        }
+
         return [
-            'host' => env('SMTP_HOST', $this->meta('smtp', $this->defaultSmtp)['host'] ?? ''),
-            'port' => (int) env('SMTP_PORT', $this->meta('smtp', $this->defaultSmtp)['port'] ?? 587),
-            'secure' => filter_var(env('SMTP_SECURE', $this->meta('smtp', $this->defaultSmtp)['secure'] ?? false), FILTER_VALIDATE_BOOLEAN),
-            'user' => env('SMTP_USER', $this->meta('smtp', $this->defaultSmtp)['user'] ?? ''),
-            'pass' => env('SMTP_PASS', $this->meta('smtp', $this->defaultSmtp)['pass'] ?? ''),
-            'fromEmail' => env('SMTP_FROM_EMAIL', env('SMTP_USER', $this->meta('smtp', $this->defaultSmtp)['fromEmail'] ?? '')),
-            'adminEmails' => env('SMTP_ADMIN_EMAILS', $this->meta('smtp', $this->defaultSmtp)['adminEmails'] ?? ''),
+            'host' => env('SMTP_HOST',
+                $cms['host'] ?: ($ws->smtp_host ?? '')),
+            'port' => (int) env('SMTP_PORT',
+                $cms['port'] ?: ($ws->smtp_port ?? 587)),
+            'secure' => filter_var(
+                env('SMTP_SECURE', $cms['secure'] ?? false)
+                    ?: ($ws->smtp_encryption === 'ssl' ? true : false),
+                FILTER_VALIDATE_BOOLEAN),
+            'user' => env('SMTP_USER',
+                $cms['user'] ?: ($ws->smtp_username ?? '')),
+            'pass' => env('SMTP_PASS',
+                $cms['pass'] ?: ($ws->smtp_password ?? '')),
+            'fromEmail' => env('SMTP_FROM_EMAIL',
+                $cms['fromEmail'] ?: ($ws->smtp_mail_to ?? '')),
+            'adminEmails' => env('SMTP_ADMIN_EMAILS',
+                $cms['adminEmails'] ?: ($ws->notification_emails ?? '')),
         ];
     }
 
@@ -338,7 +374,14 @@ class AdonisController extends Controller
     {
         try {
             $smtp = $this->runtimeSmtp();
-            if (!$smtp['host'] || !$smtp['user'] || !$smtp['pass']) return false;
+            if (!$smtp['host'] || !$smtp['user'] || !$smtp['pass']) {
+                \Illuminate\Support\Facades\Log::warning('Booking email skipped: SMTP not configured', [
+                    'host' => $smtp['host'] ? 'set' : 'empty',
+                    'user' => $smtp['user'] ? 'set' : 'empty',
+                    'pass' => $smtp['pass'] ? 'set' : 'empty',
+                ]);
+                return false;
+            }
 
             $this->configureMailer($smtp);
 
@@ -354,52 +397,59 @@ class AdonisController extends Controller
                 . "Time: {$booking['time']}\n"
                 . "Notes: " . ($booking['notes'] ?? '');
 
+            $adminSent = false;
             foreach (array_filter(array_map('trim', explode(',', $smtp['adminEmails']))) as $email) {
-                Mail::raw($body, fn ($message) => $message->to($email)->subject($subject));
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    Mail::raw($body, fn ($message) => $message->to($email)->subject($subject));
+                    $adminSent = true;
+                }
             }
 
             if (!empty($booking['clientEmail'])) {
                 Mail::raw("Your Adonis booking request has been received.\n\n" . $body, fn ($message) => $message->to($booking['clientEmail'])->subject('Adonis Booking Confirmed: ' . $booking['bookingCode']));
             }
 
+            \Illuminate\Support\Facades\Log::info('Booking email sent successfully', [
+                'bookingCode' => $booking['bookingCode'],
+                'adminSent' => $adminSent,
+                'clientEmail' => $booking['clientEmail'] ?? 'none',
+            ]);
             return true;
         } catch (\Throwable $e) {
-            report($e);
+            \Illuminate\Support\Facades\Log::error('Booking email failed: ' . $e->getMessage(), [
+                'bookingCode' => $booking['bookingCode'],
+                'trace' => $e->getTraceAsString(),
+            ]);
             return false;
         }
     }
 
     private function fallbackData(): array
     {
-        $jsonPath = base_path('db.json');
-        if (is_file($jsonPath)) {
-            $data = json_decode(file_get_contents($jsonPath), true);
-            if (is_array($data)) {
-                return array_merge(['bookings' => []], $data);
-            }
-        }
-
         return [
-            'services' => [],
-            'barbers' => [],
-            'settings' => $this->defaultSettings,
-            'smtp' => $this->withoutSecret($this->defaultSmtp),
-            'blogs' => [],
-            'bookings' => [],
+            'services'  => [],
+            'barbers'   => [],
+            'settings'  => $this->defaultSettings,
+            'smtp'      => $this->withoutSecret($this->defaultSmtp),
+            'blogs'     => [],
+            'bookings'  => [],
         ];
     }
 
     private function configureMailer(array $smtp): void
     {
+        // Purge cached transport so new config is used immediately
+        Mail::purge('smtp');
+
         config([
-            'mail.default' => 'smtp',
-            'mail.mailers.smtp.host' => $smtp['host'],
-            'mail.mailers.smtp.port' => $smtp['port'],
+            'mail.default'                 => 'smtp',
+            'mail.mailers.smtp.host'       => $smtp['host'],
+            'mail.mailers.smtp.port'       => $smtp['port'],
             'mail.mailers.smtp.encryption' => $smtp['secure'] ? 'ssl' : 'tls',
-            'mail.mailers.smtp.username' => $smtp['user'],
-            'mail.mailers.smtp.password' => $smtp['pass'],
-            'mail.from.address' => $smtp['fromEmail'] ?: $smtp['user'],
-            'mail.from.name' => 'Adonis Booking',
+            'mail.mailers.smtp.username'   => $smtp['user'],
+            'mail.mailers.smtp.password'   => $smtp['pass'],
+            'mail.from.address'            => $smtp['fromEmail'] ?: $smtp['user'],
+            'mail.from.name'               => 'Adonis Booking',
         ]);
     }
 }

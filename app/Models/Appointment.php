@@ -19,6 +19,7 @@ class Appointment extends Model
         'note',
         'status',
         'admin_note',
+        'branch_id',
     ];
 
     public function service()

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AdonisController;
+use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/data', [AdonisController::class, 'data']);
@@ -27,3 +28,6 @@ Route::post('/upload', [AdonisController::class, 'upload']);
 
 Route::post('/bookings', [AdonisController::class, 'storeBooking']);
 Route::get('/bookings', [AdonisController::class, 'bookings']);
+
+// Public appointment booking (from SPA BookingForm)
+Route::post('/appointments', [AppointmentController::class, 'store']);

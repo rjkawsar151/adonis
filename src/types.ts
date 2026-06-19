@@ -79,6 +79,17 @@ export interface SmtpSettings {
   adminEmails: string; // Comma-separated admin emails
 }
 
+export interface PriceListItem {
+  name: string;
+  price: string;
+  description?: string;
+}
+
+export interface PriceGroup {
+  category: string;
+  items: PriceListItem[];
+}
+
 export interface BlogPost {
   id: string;
   slug: string;

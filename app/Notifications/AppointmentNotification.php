@@ -12,43 +12,26 @@ class AppointmentNotification extends Notification
     use Queueable;
 
     protected $appointment;
-    protected $recipientType; // 'admin' or 'patient'
+    protected $recipientType;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
     public function __construct($appointment, $recipientType = 'admin')
     {
         $this->appointment = $appointment;
         $this->recipientType = $recipientType;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via($notifiable)
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
     public function toMail($notifiable)
     {
-        $serviceName = $this->appointment->service ? $this->appointment->service->title : "Men's Health";
+        $serviceName = $this->appointment->service ? $this->appointment->service->title : 'General';
 
         if ($this->recipientType === 'admin') {
             return (new MailMessage)
-                ->subject("New Appointment Request - Mayfair Men's Health")
+                ->subject("New Appointment Request - Adonis Men's Grooming")
                 ->greeting("Hello Admin,")
                 ->line("A new appointment request has been received on the website.")
                 ->line("Name: {$this->appointment->name}")
@@ -60,16 +43,16 @@ class AppointmentNotification extends Notification
                 ->line("Note: " . ($this->appointment->note ?? 'None'))
                 ->action('View Appointment in Admin Panel', url('/admin/appointments'))
                 ->line('Regards,')
-                ->line('Mayfair Wellness Clinic Website');
+                ->line("Adonis Men's Grooming");
         } else {
             return (new MailMessage)
-                ->subject("Appointment Request Received - Mayfair Wellness Clinic")
+                ->subject("Appointment Request Received - Adonis Men's Grooming")
                 ->greeting("Dear {$this->appointment->name},")
-                ->line("Thank you for booking an appointment with Mayfair Wellness Clinic. Our team has received your request and will contact you shortly to confirm your slot.")
+                ->line("Thank you for booking an appointment with Adonis Men's Grooming. Our team has received your request and will contact you shortly to confirm your slot.")
                 ->line("Preferred Time: {$this->appointment->preferred_date} at {$this->appointment->preferred_time}")
-                ->line("Support Phone: +8801986-660000")
+                ->line("Support Phone: +880 1919-700800")
                 ->line("Regards,")
-                ->line("Mayfair Wellness Clinic");
+                ->line("Adonis Men's Grooming");
         }
     }
 }

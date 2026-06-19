@@ -7,7 +7,6 @@ import { LucideIcon } from './components/LucideIcon';
 import { ServicesPage } from './components/ServicesPage';
 import { AboutUsPage } from './components/AboutUsPage';
 import { BarberCarousel } from './components/BarberCarousel';
-import { AdminPanel } from './components/AdminPanel';
 import { BlogPage } from './components/BlogPage';
 import { navigateTo } from './navigation';
 import { assetUrl } from './assetUrl';
@@ -20,9 +19,10 @@ import {
   IMAGES,
   OPEN_HOURS,
   CONTACT_INFO,
-  BLOG_POSTS as DEFAULT_BLOG_POSTS
+  BLOG_POSTS as DEFAULT_BLOG_POSTS,
+  COMPLETE_PRICE_LIST as DEFAULT_PRICE_LIST
 } from './data';
-import { Service, Barber, Booking, SiteSettings, SmtpSettings, BlogPost } from './types';
+import { Service, Barber, Booking, SiteSettings, SmtpSettings, BlogPost, PriceGroup, PriceListItem } from './types';
 
 const DEFAULT_SETTINGS: SiteSettings = {
   brandName: 'ADONIS',
@@ -62,6 +62,10 @@ export default function App() {
   const [smtp, setSmtp] = useState<SmtpSettings>(DEFAULT_SMTP);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>(DEFAULT_BLOG_POSTS);
+  const [priceList, setPriceList] = useState<{ gulshan: PriceGroup[]; bashundhara: PriceGroup[] }>({
+    gulshan: DEFAULT_PRICE_LIST,
+    bashundhara: [],
+  });
   const [loading, setLoading] = useState<boolean>(true);
 
   // Service selection bridge state
@@ -172,6 +176,42 @@ export default function App() {
       } catch (storageErr) {
         console.warn("Local booking storage could not be loaded.", storageErr);
       }
+    }
+    // Also try fetching from Laravel API (branch-aware services, barbers, blogs, price lists)
+    try {
+      const [svcRes, barRes, blogRes, plGulRes, plBashRes] = await Promise.allSettled([
+        fetch('/api/services?branch_id=all'),
+        fetch('/api/barbers'),
+        fetch('/api/blogs'),
+        fetch('/api/price-list/gulshan'),
+        fetch('/api/price-list/bashundhara'),
+      ]);
+      if (svcRes.status === 'fulfilled' && svcRes.value.ok) {
+        const svc = await svcRes.value.json();
+        if (svc && svc.length > 0) setServices(svc);
+      }
+      if (barRes.status === 'fulfilled' && barRes.value.ok) {
+        const bar = await barRes.value.json();
+        if (bar && bar.length > 0) {
+          setBarbers(bar.map((b: Barber) => ({ ...b, portraitUrl: assetUrl(b.portraitUrl) })));
+        }
+      }
+      if (blogRes.status === 'fulfilled' && blogRes.value.ok) {
+        const blog = await blogRes.value.json();
+        if (blog && blog.length > 0) {
+          setBlogs(blog.map((b: BlogPost) => ({ ...b, coverImage: assetUrl(b.coverImage) })));
+        }
+      }
+      if (plGulRes.status === 'fulfilled' && plGulRes.value.ok) {
+        const pl = await plGulRes.value.json();
+        if (pl && pl.length > 0) setPriceList(prev => ({ ...prev, gulshan: pl }));
+      }
+      if (plBashRes.status === 'fulfilled' && plBashRes.value.ok) {
+        const pl = await plBashRes.value.json();
+        if (pl && pl.length > 0) setPriceList(prev => ({ ...prev, bashundhara: pl }));
+      }
+    } catch (laravelErr) {
+      console.warn("Laravel API not available, using defaults.");
     } finally {
       setLoading(false);
     }
@@ -370,6 +410,7 @@ export default function App() {
               document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' });
             }, 250);
           }}
+          priceList={priceList}
         />
         {renderFooter()}
       </div>
@@ -406,23 +447,6 @@ export default function App() {
         <Header />
         <BlogPage posts={blogs} slug={slug} />
         {renderFooter()}
-      </div>
-    );
-  }
-
-  // 3. HIDDEN CMS LOGIN ROUTE
-  if (currentPath === '/login') {
-    return (
-      <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
-        <AdminPanel
-          services={services}
-          barbers={barbers}
-          settings={settings}
-          smtp={smtp}
-          bookings={bookings}
-          blogs={blogs}
-          onRefreshData={fetchDbData}
-        />
       </div>
     );
   }
@@ -969,6 +993,7 @@ export default function App() {
             initialBranchId={selectedBookingBranchId}
             initialServiceId={selectedServiceId}
             services={services}
+            priceList={priceList}
             onBookingSuccess={(booking) => setBookings(prev => [booking, ...prev].slice(0, 50))}
           />
         </div>

@@ -31,6 +31,8 @@ class Service extends Model
         'sort_order',
         'seo_title',
         'seo_description',
+        'branch_id',
+        'price',
     ];
 
     protected $casts = [
@@ -71,5 +73,15 @@ class Service extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function getBranchNameAttribute(): string
+    {
+        $branches = [
+            'gulshan' => 'Gulshan Premium Lounge',
+            'bashundhara' => 'Bashundhara Premium Lounge',
+            'both' => 'Both Branches',
+        ];
+        return $branches[$this->branch_id] ?? 'All Branches';
     }
 }

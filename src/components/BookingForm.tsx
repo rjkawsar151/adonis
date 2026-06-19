@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { BRANCHES, OPEN_HOURS, COMPLETE_PRICE_LIST } from '../data';
-import { Booking, Service } from '../types';
+import { BRANCHES, OPEN_HOURS } from '../data';
+import { Booking, Service, PriceGroup, PriceListItem } from '../types';
 import { LucideIcon } from './LucideIcon';
 
 const ADMIN_BOOKING_EMAILS = [
@@ -15,13 +15,15 @@ interface BookingFormProps {
   initialServiceId?: string;
   onBookingSuccess?: (booking: Booking) => void;
   services: Service[];
+  priceList: { gulshan: PriceGroup[]; bashundhara: PriceGroup[] };
 }
 
 export const BookingForm: React.FC<BookingFormProps> = ({
   initialBranchId = 'gulshan',
   initialServiceId = '',
   onBookingSuccess,
-  services
+  services,
+  priceList
 }) => {
   // Booking Form State
   const [selectedBranch, setSelectedBranch] = useState<string>(initialBranchId);
@@ -38,21 +40,11 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [successBooking, setSuccessBooking] = useState<Booking | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [phpMailerOk, setPhpMailerOk] = useState<boolean | null>(null);
   const [emailStatus, setEmailStatus] = useState<'pending' | 'sent' | 'failed' | null>(null);
 
   // Service search & category accordion state
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [openCategories, setOpenCategories] = useState<Set<string>>(new Set());
-
-  // Check if PHP mailer is available
-  useEffect(() => {
-    fetch('./sendmail.php?test=1')
-      .then(r => r.json()).then(d => {
-        setPhpMailerOk(d.success === true);
-        d.success && console.log('sendmail.php available, methods:', d.methods);
-      }).catch(() => setPhpMailerOk(false));
-  }, []);
 
   // Update selection if prop changes
   useEffect(() => {
@@ -131,8 +123,13 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     });
   };
 
+  // Use branch-specific price list from DB; fallback to gulshan if bashundhara has no data
+  const activePriceList = selectedBranch === 'bashundhara' && priceList.bashundhara.length > 0
+    ? priceList.bashundhara
+    : priceList.gulshan;
+
   // Filtered price list based on search query
-  const filteredPriceList = COMPLETE_PRICE_LIST
+  const filteredPriceList = activePriceList
     .map(group => ({
       ...group,
       items: group.items.filter(item =>
@@ -213,25 +210,38 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
       const branchInfo = BRANCHES.find(b => b.id === selectedBranch);
       const svcInfo = services.find(s => s.id === selectedService);
-      fetch('./sendmail.php', {
+
+      // Persist booking and trigger email via Laravel API
+      setEmailStatus('pending');
+      fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: newBooking.id,
           clientName: newBooking.clientName,
           clientPhone: newBooking.clientPhone,
           clientEmail: newBooking.clientEmail,
           branchId: newBooking.branchId,
           branchName: branchInfo?.name || selectedBranch,
+          serviceId: selectedService || '',
           serviceName: svcInfo?.name || selectedService || 'General Appointment',
+          barberId: '',
           date: newBooking.date,
           time: newBooking.time,
           notes: newBooking.notes,
-          bookingCode: newBooking.bookingCode
+          bookingCode: newBooking.bookingCode,
         })
       }).then(r => r.json()).then(d => {
-        if (d.success) { setEmailStatus('sent'); console.log('sendmail.php:', d.method, d); }
-        else { setEmailStatus('failed'); console.error('sendmail.php error:', d.error); }
-      }).catch(e => { setEmailStatus('failed'); console.error('sendmail.php fetch failed:', e); });
+        if (d.success) {
+          setEmailStatus(d.emailSent ? 'sent' : 'failed');
+        } else {
+          setEmailStatus('failed');
+          console.error('Booking API error:', d.error);
+        }
+      }).catch(e => {
+        setEmailStatus('failed');
+        console.error('Booking API fetch failed:', e);
+      });
     } catch (err) {
       console.error(err);
       setErrorMsg('Booking could not be saved in this browser. Please call the branch or try again in a moment.');
@@ -387,112 +397,146 @@ ${booking.notes ? `- Notes: ${booking.notes}` : ''}`;
                       Step 2: Select Grooming Service (Optional)
                     </label>
 
-                    {/* Search bar */}
-                    <div className="relative mb-3">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                        <LucideIcon name="Search" size={13} className="text-gold-400/50" />
+                    {selectedBranch === 'bashundhara' && priceList.bashundhara.length === 0 ? (
+                      /* Bashundhara with no price list — show call/location buttons */
+                      <div className="border border-white/10 bg-salon-gray/30 p-5 space-y-4 text-center">
+                        <div className="w-10 h-10 mx-auto rounded-full bg-gold-400/10 border border-gold-400/20 flex items-center justify-center text-gold-400">
+                          <LucideIcon name="Sparkles" size={20} />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-serif text-white uppercase tracking-wider">
+                            Bashundhara Pricing
+                          </p>
+                          <p className="text-xs text-gray-400 leading-relaxed max-w-sm mx-auto">
+                            Prices for our Bashundhara Premium Lounge will be updated soon. In the meantime, you can reach out to us directly.
+                          </p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                          <a
+                            href="tel:+8801720080091"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gold-400 text-black hover:bg-gold-500 transition-colors font-serif text-xs font-bold uppercase tracking-widest"
+                          >
+                            <LucideIcon name="PhoneCall" size={14} />
+                            Call Branch
+                          </a>
+                          <a
+                            href="https://www.google.com/maps?sca_esv=c0a979c20fc01ddf&biw=1920&bih=911&sxsrf=ANbL-n6rBQHc6On-WNWo1_ntWaHqkg8ONQ:1779702997846&gs_lp=Egxnd3Mtd2l6LXNlcnAiCWFkb25pcyBiYSoCCAAyEBAuGK8BGMcBGIAEGIoFGCcyCxAAGIAEGIoFGJECMgoQABiABBgUGIcCMgsQABiABBiKBRiRAjIQEC4YFBivARjHARiHAhiABDILEAAYgAQYigUYkQIyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMh0QLhivARjHARiABBiKBRiXBRjcBBjeBBjgBNgBAUiWFVAAWMwNcAF4AZABAJgBsQGgAckHqgEDMC42uAEDyAEA-AEBmAIHoALlB8ICBBAjGCfCAgoQIxiABBiKBRgnwgIQEC4YgAQYigUYxwEYrwEYJ8ICEBAAGIAEGIoFGEMYsQMYyQPCAgoQABiABBiKBRhDwgIOEC4YrwEYxwEYkgMYgATCAgUQLhiABMICCxAuGK8BGMcBGIAEmAMAugYGCAEQARgUkgcDMS42oAeVZbIHAzAuNrgH4gfCBwUwLjMuNMgHFYAIAQ&um=1&ie=UTF-8&fb=1&gl=bd&sa=X&geocode=KXuG98vmx1U3MY1A3OZhVIwb&daddr=Ka-1/B,+4th+Floor,+Rahman+Tower,+Main+Road,+Dhaka+1229"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/15 text-white hover:bg-white/5 transition-colors font-serif text-xs font-semibold uppercase tracking-widest"
+                          >
+                            <LucideIcon name="Navigation" size={14} />
+                            Get Directions
+                          </a>
+                        </div>
                       </div>
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                        placeholder="Search any service (e.g. Facial, Massage, Hair Cut)..."
-                        className="w-full bg-salon-gray text-white text-xs border border-white/10 pl-8 pr-8 py-2.5 focus:outline-none focus:border-gold-400/50 transition-colors placeholder-gray-600"
-                      />
-                      {searchQuery && (
-                        <button
-                          type="button"
-                          onClick={() => setSearchQuery('')}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
-                        >
-                          <LucideIcon name="X" size={13} />
-                        </button>
+                    ) : (
+                      <>
+                      {/* Search bar */}
+                      <div className="relative mb-3">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <LucideIcon name="Search" size={13} className="text-gold-400/50" />
+                        </div>
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={e => setSearchQuery(e.target.value)}
+                          placeholder="Search any service (e.g. Facial, Massage, Hair Cut)..."
+                          className="w-full bg-salon-gray text-white text-xs border border-white/10 pl-8 pr-8 py-2.5 focus:outline-none focus:border-gold-400/50 transition-colors placeholder-gray-600"
+                        />
+                        {searchQuery && (
+                          <button
+                            type="button"
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                          >
+                            <LucideIcon name="X" size={13} />
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Active selection badge */}
+                      {selectedService && (
+                        <div className="mb-2 px-3 py-2 bg-gold-400/10 border border-gold-400/30 flex items-center justify-between">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <LucideIcon name="CheckCircle" size={13} className="text-gold-400 shrink-0" />
+                            <span className="text-[11px] text-white font-sans truncate">{selectedService}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedService('')}
+                            className="text-[10px] text-gold-400/70 hover:text-gold-400 font-mono uppercase tracking-widest shrink-0 ml-3 transition-colors"
+                          >
+                            Clear
+                          </button>
+                        </div>
                       )}
-                    </div>
 
-                    {/* Active selection badge */}
-                    {selectedService && (
-                      <div className="mb-2 px-3 py-2 bg-gold-400/10 border border-gold-400/30 flex items-center justify-between">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <LucideIcon name="CheckCircle" size={13} className="text-gold-400 shrink-0" />
-                          <span className="text-[11px] text-white font-sans truncate">{selectedService}</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedService('')}
-                          className="text-[10px] text-gold-400/70 hover:text-gold-400 font-mono uppercase tracking-widest shrink-0 ml-3 transition-colors"
-                        >
-                          Clear
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Category accordion */}
-                    <div
-                      className="border border-white/5 bg-salon-black overflow-y-auto"
-                      style={{ maxHeight: '280px' }}
-                    >
-                      {filteredPriceList.length === 0 ? (
-                        <div className="px-4 py-8 text-center">
-                          <LucideIcon name="SearchX" size={20} className="text-gray-600 mx-auto mb-2" />
-                          <p className="text-xs text-gray-500 font-sans">No services match &ldquo;{searchQuery}&rdquo;</p>
-                        </div>
-                      ) : (
-                        filteredPriceList.map(group => {
-                          const isOpen = openCategories.has(group.category) || !!searchQuery.trim();
-                          return (
-                            <div key={group.category} className="border-b border-white/5 last:border-b-0">
-                              {/* Category header */}
-                              <button
-                                type="button"
-                                onClick={() => toggleCategory(group.category)}
-                                className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-salon-gray/20 transition-colors text-left"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <span className="text-[10px] font-mono tracking-widest text-gold-400 uppercase">{group.category}</span>
-                                  <span className="text-[9px] text-gray-600 font-mono">({group.items.length})</span>
-                                </div>
-                                <LucideIcon
-                                  name={isOpen ? 'ChevronUp' : 'ChevronDown'}
-                                  size={12}
-                                  className="text-gold-400/50 shrink-0"
-                                />
-                              </button>
-
-                              {/* Service items */}
-                              {isOpen && (
-                                <div className="px-2 pb-2 space-y-1">
-                                  {group.items.map(item => (
-                                    <div
-                                      key={item.name}
-                                      onClick={() => setSelectedService(prev => prev === item.name ? '' : item.name)}
-                                      className={`cursor-pointer px-3 py-2 flex items-center justify-between transition-all duration-150 ${
-                                        selectedService === item.name
-                                          ? 'bg-gold-400/12 border border-gold-400/40'
-                                          : 'bg-salon-gray/15 border border-white/5 hover:border-white/15 hover:bg-salon-gray/30'
-                                      }`}
-                                    >
-                                      <div className="flex items-center gap-2 min-w-0">
-                                        {selectedService === item.name && (
-                                          <div className="h-1.5 w-1.5 rounded-full bg-gold-400 shrink-0" />
-                                        )}
-                                        <div className="min-w-0">
-                                          <p className="text-[11px] text-white font-sans leading-tight truncate">{item.name}</p>
-                                          {item.description && (
-                                            <p className="text-[9px] text-gray-500 font-sans mt-0.5 line-clamp-1">{item.description}</p>
+                      {/* Category accordion */}
+                      <div
+                        className="border border-white/5 bg-salon-black overflow-y-auto"
+                        style={{ maxHeight: '280px' }}
+                      >
+                        {filteredPriceList.length === 0 ? (
+                          <div className="px-4 py-8 text-center">
+                            <LucideIcon name="SearchX" size={20} className="text-gray-600 mx-auto mb-2" />
+                            <p className="text-xs text-gray-500 font-sans">No services match &ldquo;{searchQuery}&rdquo;</p>
+                          </div>
+                        ) : (
+                          filteredPriceList.map(group => {
+                            const isOpen = openCategories.has(group.category) || !!searchQuery.trim();
+                            return (
+                              <div key={group.category} className="border-b border-white/5 last:border-b-0">
+                                <button
+                                  type="button"
+                                  onClick={() => toggleCategory(group.category)}
+                                  className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-salon-gray/20 transition-colors text-left"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-mono tracking-widest text-gold-400 uppercase">{group.category}</span>
+                                    <span className="text-[9px] text-gray-600 font-mono">({group.items.length})</span>
+                                  </div>
+                                  <LucideIcon
+                                    name={isOpen ? 'ChevronUp' : 'ChevronDown'}
+                                    size={12}
+                                    className="text-gold-400/50 shrink-0"
+                                  />
+                                </button>
+                                {isOpen && (
+                                  <div className="px-2 pb-2 space-y-1">
+                                    {group.items.map(item => (
+                                      <div
+                                        key={item.name}
+                                        onClick={() => setSelectedService(prev => prev === item.name ? '' : item.name)}
+                                        className={`cursor-pointer px-3 py-2 flex items-center justify-between transition-all duration-150 ${
+                                          selectedService === item.name
+                                            ? 'bg-gold-400/12 border border-gold-400/40'
+                                            : 'bg-salon-gray/15 border border-white/5 hover:border-white/15 hover:bg-salon-gray/30'
+                                        }`}
+                                      >
+                                        <div className="flex items-center gap-2 min-w-0">
+                                          {selectedService === item.name && (
+                                            <div className="h-1.5 w-1.5 rounded-full bg-gold-400 shrink-0" />
                                           )}
+                                          <div className="min-w-0">
+                                            <p className="text-[11px] text-white font-sans leading-tight truncate">{item.name}</p>
+                                            {item.description && (
+                                              <p className="text-[9px] text-gray-500 font-sans mt-0.5 line-clamp-1">{item.description}</p>
+                                            )}
+                                          </div>
                                         </div>
+                                        <span className="text-[11px] font-mono text-gold-400 font-semibold shrink-0 ml-2">{item.price}</span>
                                       </div>
-                                      <span className="text-[11px] font-mono text-gold-400 font-semibold shrink-0 ml-2">{item.price}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                      </>
+                    )}
                   </div>
 
                   {/* Barber selection removed */}
@@ -762,14 +806,6 @@ ${booking.notes ? `- Notes: ${booking.notes}` : ''}`;
                           >
                             <LucideIcon name="PhoneCall" size={15} />
                             Call Contact Us
-                          </a>
-
-                          <a
-                            href={getAdminBookingMailto(successBooking)}
-                            className="flex items-center justify-center gap-2 px-4 py-3 border border-gold-400/40 text-gold-400 hover:bg-gold-400 hover:text-salon-black font-serif text-xs font-bold uppercase tracking-widest transition-all"
-                          >
-                            <LucideIcon name="Send" size={15} />
-                            Send To Admin
                           </a>
 
                           {successBooking.clientEmail && (

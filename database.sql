@@ -44,6 +44,21 @@ CREATE TABLE IF NOT EXISTS blogs (
   updatedAt DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS bookings (
+  id VARCHAR(36) PRIMARY KEY,
+  clientName VARCHAR(255) NOT NULL,
+  clientPhone VARCHAR(30) NOT NULL,
+  clientEmail VARCHAR(255) DEFAULT '',
+  branchId VARCHAR(60) NOT NULL,
+  barberId VARCHAR(120) DEFAULT '',
+  serviceId VARCHAR(120) DEFAULT '',
+  date DATE NOT NULL,
+  time VARCHAR(20) NOT NULL,
+  notes TEXT,
+  bookingCode VARCHAR(30) NOT NULL,
+  createdAt DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 INSERT INTO services (id, name, description, durationMin, priceBDT, category, icon) VALUES
 ('precision-haircut', 'Precision Haircut', 'Expert consultation, refreshing shampoo, premium haircut, sharp styling, and high-performance finish.', 45, 700, 'hair', 'Scissors'),
 ('skin-fade', 'Skin Fade & Modern Styling', 'Expert low/mid/high zero fade blend, hair texturizing, and high-hold pomade styling.', 60, 2500, 'hair', 'Sparkles'),

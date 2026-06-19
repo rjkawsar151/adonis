@@ -2,7 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LucideIcon } from './LucideIcon';
 import { navigateTo } from '../navigation';
-import { COMPLETE_PRICE_LIST, GULSHAN_PACKAGES, PriceGroup } from '../data';
+import { GULSHAN_PACKAGES } from '../data';
+import { PriceGroup, PriceListItem } from '../types';
 
 const CATEGORY_ICONS: Record<string, string> = {
   'HAIR CUTTING':         'Scissors',
@@ -44,9 +45,10 @@ interface FlatService {
 interface ServicesPageProps {
   initialBranch?: 'gulshan' | 'bashundhara';
   onBookService?: (serviceId: string, branchId: 'gulshan' | 'bashundhara') => void;
+  priceList?: { gulshan: PriceGroup[]; bashundhara: PriceGroup[] };
 }
 
-export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gulshan', onBookService }) => {
+export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gulshan', onBookService, priceList }) => {
   const [selectedBranch, setSelectedBranch] = useState<'gulshan' | 'bashundhara'>(initialBranch);
   const [activeGroup, setActiveGroup] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,11 +67,16 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
 
   const isPackages = CATEGORY_GROUPS[activeGroup].categories[0] === '__packages__';
 
+  const activePriceList: PriceGroup[] = useMemo(() => {
+    if (!priceList) return [];
+    return selectedBranch === 'bashundhara' ? priceList.bashundhara : priceList.gulshan;
+  }, [selectedBranch, priceList]);
+
   const filteredGroups: PriceGroup[] = useMemo(() => {
     const groupCats = CATEGORY_GROUPS[activeGroup].categories;
     const base: PriceGroup[] = groupCats.length === 0
-      ? COMPLETE_PRICE_LIST
-      : COMPLETE_PRICE_LIST.filter(g => groupCats.includes(g.category));
+      ? activePriceList
+      : activePriceList.filter(g => groupCats.includes(g.category));
 
     if (!searchQuery.trim()) return base;
     const q = searchQuery.toLowerCase();
@@ -81,7 +88,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
         )
       }))
       .filter(g => g.items.length > 0);
-  }, [activeGroup, searchQuery]);
+  }, [activeGroup, searchQuery, activePriceList]);
 
   const flatServices: FlatService[] = useMemo(() => {
     return filteredGroups.flatMap(g =>
@@ -154,7 +161,9 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
           </div>
         </div>
 
-        {selectedBranch === 'gulshan' ? (
+        {(() => {
+          const showFullCatalog = selectedBranch === 'gulshan' || (selectedBranch === 'bashundhara' && activePriceList.length > 0);
+          return showFullCatalog ? (
           <>
             {/* ── Group Filter Tabs ── */}
             <div className="overflow-x-auto pb-2 -mx-4 px-4">
@@ -209,7 +218,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
             {isPackages ? (
               <div className="space-y-6">
                 <div className="text-center space-y-1 mb-8">
-                  <p className="text-sm text-gray-400 font-mono uppercase tracking-widest">Gulshan Branch · Exclusive Bundles</p>
+                  <p className="text-sm text-gray-400 font-mono uppercase tracking-widest">Exclusive Bundles</p>
                   <p className="text-xs text-gray-600 italic">All packages include a discount vs. individual service pricing.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -227,7 +236,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <span className="text-[10px] font-mono tracking-widest text-gold-400 uppercase bg-gold-400/10 px-2 py-0.5 border border-gold-400/15 inline-block mb-2">
-                              Gulshan Package
+                              Adonis Package
                             </span>
                             <h3 className="font-serif text-lg uppercase tracking-wider text-white group-hover:text-gold-400 transition-colors leading-tight">
                               {pkg.name}
@@ -308,7 +317,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
                         const groupIcon = CATEGORY_ICONS[group.category] ?? 'ChevronRight';
                         return (
                           <div key={group.category} className="border border-white/5 bg-salon-gray/20 overflow-hidden">
-                            {/* Category Header Button */}
                             <button
                               onClick={() => setExpandedCat(expandedCat === group.category ? null : group.category)}
                               className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-salon-gray/40 transition-colors text-left cursor-pointer"
@@ -333,7 +341,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
                               />
                             </button>
 
-                            {/* Services List inside Category */}
                             <AnimatePresence initial={false}>
                               {isOpen && (
                                 <motion.div
@@ -386,7 +393,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
           </>
         ) : (
           /* ══════════════════════════════════════════════════ */
-          /* BASHUNDHARA BRANCH COMING SOON DISPLAY             */
+          /* BASHUNDHARA BRANCH NO PRICE LIST — CALL/LOCATION   */
           /* ══════════════════════════════════════════════════ */
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -439,7 +446,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
               </a>
             </div>
           </motion.div>
-        )}
+        )})()}
 
         {/* ── Booking CTA Banner ── */}
         <div className="border border-gold-400/25 bg-salon-gray/30 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
