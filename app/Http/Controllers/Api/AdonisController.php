@@ -215,10 +215,6 @@ class AdonisController extends Controller
                 return response()->json(['success' => false, 'error' => 'Missing required booking details.'], 400);
             }
         }
-        if ($booking['branchId'] === 'gulshan' && in_array($booking['time'], ['08:00 PM', '09:00 PM'], true)) {
-            return response()->json(['success' => false, 'error' => 'Gulshan branch closes at 7PM. Please choose an earlier time.'], 400);
-        }
-
         DB::table('bookings')->insert([
             'id' => $booking['id'] ?? (string) Str::uuid(),
             'clientName' => $booking['clientName'],

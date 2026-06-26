@@ -55,16 +55,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
   useEffect(() => {
     setSelectedBranch(initialBranchId);
-    if (initialBranchId === 'gulshan' && ['08:00 PM', '09:00 PM'].includes(time)) {
-      setTime('');
-    }
   }, [initialBranchId, time]);
 
   const handleBranchChange = (branchId: string) => {
     setSelectedBranch(branchId);
-    if (branchId === 'gulshan' && ['08:00 PM', '09:00 PM'].includes(time)) {
-      setTime('');
-    }
   };
 
 
@@ -96,7 +90,31 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     return options;
   };
 
-  const timeSlots = [
+  const timeSlotsByBranch: Record<string, string[]> = {
+    gulshan: [
+      '10:00 AM',
+      '11:15 AM',
+      '12:30 PM',
+      '01:45 PM',
+      '03:00 PM',
+      '04:15 PM',
+      '05:30 PM',
+      '06:45 PM',
+      '08:30 PM'
+    ],
+    bashundhara: [
+      '10:00 AM',
+      '11:15 AM',
+      '12:30 PM',
+      '01:45 PM',
+      '03:00 PM',
+      '04:15 PM',
+      '05:30 PM',
+      '06:45 PM',
+      '08:30 PM'
+    ]
+  };
+  const defaultTimeSlots = [
     '10:00 AM',
     '11:15 AM',
     '12:30 PM',
@@ -105,13 +123,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     '04:15 PM',
     '05:30 PM',
     '06:45 PM',
-    '08:00 PM',
-    '09:00 PM'
+    '08:30 PM'
   ];
   const selectedBranchDetails = BRANCHES.find(branch => branch.id === selectedBranch);
-  const availableTimeSlots = selectedBranch === 'gulshan'
-    ? timeSlots.filter(slot => !['08:00 PM', '09:00 PM'].includes(slot))
-    : timeSlots;
+  const availableTimeSlots = timeSlotsByBranch[selectedBranch] || defaultTimeSlots;
 
   // Toggle a category open/closed
   const toggleCategory = (cat: string) => {
