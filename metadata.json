@@ -1,0 +1,6 @@
+{
+  "name": "Adonis Men's Grooming",
+  "description": "Exquisite luxury men's grooming salon in Dhaka, offering elite hair, beard, and VIP spa styling with uncompromising standards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

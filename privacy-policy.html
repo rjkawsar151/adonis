@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b0d">
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="Read the Adonis Men's Grooming Salon Privacy Policy to learn how we collect, use, protect and manage personal information.">
+  <link rel="canonical" href="https://www.adonis.com.bd/privacy-policy/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Privacy Policy | Adonis Men's Grooming Salon</title>
+
+  <style>
+    :root {
+      --bg: #07090b;
+      --surface: #141414;
+      --surface-2: #1c1c1c;
+      --card: #141414;
+      --text: #d1d5db;
+      --muted: #9ca3af;
+      --line: rgba(255, 255, 255, 0.09);
+      --brand: #32bbed;
+      --brand-dark: #32bbed;
+      --brand-soft: rgba(50, 187, 237, 0.08);
+      --warm: #32bbed;
+      --white: #ffffff;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --container: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 110px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: #0b0b0b;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: var(--brand-dark);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      color: #8eddf8;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(54, 188, 234, 0.45);
+      outline-offset: 3px;
+      border-radius: 5px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 9999;
+      top: 12px;
+      left: 12px;
+      transform: translateY(-180%);
+      padding: 10px 16px;
+      border-radius: 8px;
+      color: #001018;
+      background: var(--brand);
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 1000;
+      top: 0;
+      border-top: 4px solid var(--warm);
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      background: rgba(7, 9, 11, 0.97);
+      backdrop-filter: blur(16px);
+    }
+
+    .header-inner {
+      width: min(var(--container), calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      text-decoration: none;
+    }
+
+    .brand img {
+      display: block;
+      width: 184px;
+      height: 60px;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .site-nav a {
+      color: #d5d9dd;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .site-nav a:hover,
+    .site-nav a[aria-current="page"] {
+      color: var(--brand);
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 132px;
+      min-height: 42px;
+      padding: 10px 18px;
+      color: #041018;
+      background: var(--brand);
+      font-family: Cinzel, Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+      box-shadow: 0 10px 26px rgba(54,188,234,0.18);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .header-cta:hover {
+      color: #041018;
+      background: #64cff2;
+      transform: translateY(-1px);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 10px;
+      color: var(--white);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .menu-toggle span,
+    .menu-toggle::before,
+    .menu-toggle::after {
+      display: block;
+      width: 20px;
+      height: 2px;
+      margin: 4px auto;
+      background: currentColor;
+      content: "";
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .menu-toggle[aria-expanded="true"] span {
+      opacity: 0;
+    }
+
+    .menu-toggle[aria-expanded="true"]::before {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"]::after {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 84% 20%, rgba(54,188,234,0.19), transparent 27%),
+        radial-gradient(circle at 12% 85%, rgba(120,83,76,0.20), transparent 30%),
+        linear-gradient(135deg, #080a0c 0%, #0c1116 55%, #101820 100%);
+    }
+
+    .hero::after {
+      position: absolute;
+      inset: auto -8% -120px auto;
+      width: 420px;
+      height: 420px;
+      border: 1px solid rgba(54,188,234,0.13);
+      border-radius: 50%;
+      box-shadow: 0 0 0 45px rgba(54,188,234,0.025), 0 0 0 90px rgba(54,188,234,0.018);
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 84px 0 82px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 34px;
+      height: 2px;
+      background: var(--brand);
+      content: "";
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-family: Cinzel, Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 7vw, 78px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin: 24px 0 0;
+      color: #c4cbd1;
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.65;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 999px;
+      color: #e5e9ec;
+      background: rgba(255,255,255,0.045);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .page-shell {
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 56px 0 80px;
+    }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 112px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(14, 31, 44, 0.06);
+    }
+
+    .toc-heading {
+      width: 100%;
+      padding: 18px 20px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      background: var(--brand-soft);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .toc-list {
+      display: grid;
+      gap: 2px;
+      margin: 0;
+      padding: 12px;
+      list-style: none;
+    }
+
+    .toc-list a {
+      display: block;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: #56616b;
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.35;
+      text-decoration: none;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .toc-list a:hover,
+    .toc-list a.is-active {
+      color: #075f81;
+      background: var(--brand-soft);
+    }
+
+    .policy-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .policy-intro {
+      padding: 34px 38px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #171717 0%, #11191c 100%);
+    }
+
+    .policy-intro p {
+      margin: 0;
+      color: #c4cbd1;
+      font-size: 17px;
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid #beeaf9;
+      border-radius: 14px;
+      background: rgba(50, 187, 237, 0.07);
+    }
+
+    .notice-icon {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      color: #002634;
+      background: var(--brand);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .notice p {
+      margin: 0;
+      color: #c4cbd1;
+      font-size: 14px;
+    }
+
+    .policy-content {
+      padding: 8px 38px 42px;
+    }
+
+    .policy-section {
+      padding: 34px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .policy-section:last-child {
+      border-bottom: 0;
+      padding-bottom: 6px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      color: #ffffff;
+      font-family: Cinzel, Georgia, "Times New Roman", serif;
+      font-size: clamp(25px, 3vw, 34px);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      margin: 24px 0 10px;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .policy-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin: 14px 0 18px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 9px;
+      padding-left: 4px;
+    }
+
+    li::marker {
+      color: var(--brand-dark);
+    }
+
+    .definition-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #1c1c1c;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .contact-box {
+      margin-top: 18px;
+      padding: 22px;
+      border-left: 4px solid var(--brand);
+      border-radius: 0 14px 14px 0;
+      background: rgba(50, 187, 237, 0.07);
+    }
+
+    .contact-box address {
+      margin: 0;
+      font-style: normal;
+    }
+
+    .site-footer {
+      color: #aeb7be;
+      background: #080b0e;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-main {
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 52px 0 36px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 1fr;
+      gap: 44px;
+    }
+
+    .footer-brand img {
+      width: 184px;
+      height: 60px;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .footer-brand p {
+      max-width: 390px;
+      margin: 14px 0 0;
+      color: #9ba6ae;
+      font-size: 14px;
+    }
+
+    .footer-title {
+      margin: 0 0 16px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 9px;
+    }
+
+    .footer-links a {
+      color: #adb7be;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--brand);
+    }
+
+    .footer-contact p {
+      margin: 0 0 8px;
+      color: #adb7be;
+      font-size: 14px;
+    }
+
+    .footer-contact a {
+      color: #cfefff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-bottom-inner {
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 18px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: #818d95;
+      font-size: 13px;
+    }
+
+    .back-to-top {
+      position: fixed;
+      z-index: 900;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: #001018;
+      background: var(--brand);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .header-inner {
+        min-height: 74px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-wrap {
+        position: absolute;
+        top: 100%;
+        right: 20px;
+        left: 20px;
+        display: none;
+        padding: 18px;
+        border: 1px solid rgba(255,255,255,0.11);
+        border-radius: 0 0 14px 14px;
+        background: #0c1014;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.30);
+      }
+
+      .nav-wrap.is-open {
+        display: grid;
+        gap: 18px;
+      }
+
+      .site-nav {
+        display: grid;
+        gap: 0;
+      }
+
+      .site-nav a {
+        padding: 12px 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .header-cta {
+        width: 100%;
+      }
+
+      .policy-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+
+      .toc-heading {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .toc-heading::after {
+        position: absolute;
+        right: 18px;
+        content: "+";
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .toc-heading[aria-expanded="true"]::after {
+        content: "−";
+      }
+
+      .toc-list {
+        display: none;
+      }
+
+      .toc-list.is-open {
+        display: grid;
+      }
+
+      .footer-main {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      html {
+        scroll-padding-top: 88px;
+      }
+
+      .header-inner,
+      .hero-inner,
+      .page-shell,
+      .footer-main,
+      .footer-bottom-inner {
+        width: min(100% - 28px, var(--container));
+      }
+
+      .brand img,
+      .footer-brand img {
+        width: 150px;
+        height: 50px;
+      }
+
+      .hero-inner {
+        padding: 60px 0 58px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 13vw, 56px);
+      }
+
+      .page-shell {
+        padding: 34px 0 56px;
+      }
+
+      .policy-card {
+        border-radius: 18px;
+      }
+
+      .policy-intro,
+      .policy-content {
+        padding-right: 22px;
+        padding-left: 22px;
+      }
+
+      .policy-content {
+        padding-bottom: 28px;
+      }
+
+      .policy-section {
+        padding: 28px 0;
+      }
+
+      .definition-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .footer-brand {
+        grid-column: auto;
+      }
+
+      .footer-bottom-inner {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      .site-header,
+      .hero-meta,
+      .toc,
+      .site-footer,
+      .back-to-top {
+        display: none !important;
+      }
+
+      body {
+        color: #000;
+        background: #fff;
+        font-size: 11pt;
+      }
+
+      .hero {
+        color: #000;
+        background: #fff;
+      }
+
+      .hero-inner {
+        padding: 20px 0;
+      }
+
+      .hero-copy {
+        color: #333;
+      }
+
+      .page-shell {
+        width: 100%;
+        padding: 0;
+      }
+
+      .policy-grid {
+        display: block;
+      }
+
+      .policy-card {
+        border: 0;
+        box-shadow: none;
+      }
+
+      .policy-section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2126598581233056'); 
+  fbq('track', 'PageView');
+  </script>
+  <noscript>
+  <img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=2126598581233056&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Facebook Pixel Code -->
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="https://www.adonis.com.bd/" aria-label="Adonis home">
+        <img src="data:image/png;base64,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" alt="Adonis Men's Grooming Salon">
+      </a>
+
+      <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation">
+        <span></span>
+      </button>
+
+      <div class="nav-wrap" id="primary-navigation">
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/services/gulshan">Services</a>
+          <a href="/about">About Us</a>
+          <a href="/career">Careers</a>
+          <a href="/#branch-section">Locations</a>
+        </nav>
+        <a class="header-cta" href="/#booking-section">Book Now</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-inner">
+        <span class="eyebrow">Your privacy matters</span>
+        <h1 id="page-title">Privacy Policy</h1>
+        <p class="hero-copy">
+          This Privacy Policy explains how Adonis Men's Grooming Salon collects, uses, shares and protects personal information when you visit our website, book an appointment, contact us, apply for a position or use our related services.
+        </p>
+        <div class="hero-meta" aria-label="Policy information">
+          <span class="meta-pill">Effective date: 17 July 2026</span>
+          <span class="meta-pill">Website: adonis.com.bd</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-shell">
+      <div class="policy-grid">
+        <aside class="toc" aria-label="Privacy Policy contents">
+          <button class="toc-heading" type="button" aria-expanded="false" aria-controls="toc-list">On this page</button>
+          <ol class="toc-list" id="toc-list">
+            <li><a href="#scope">1. Scope</a></li>
+            <li><a href="#information">2. Information we collect</a></li>
+            <li><a href="#sources">3. How we collect information</a></li>
+            <li><a href="#use">4. How we use information</a></li>
+            <li><a href="#cookies">5. Cookies and analytics</a></li>
+            <li><a href="#sharing">6. How we share information</a></li>
+            <li><a href="#payments">7. Payments and third parties</a></li>
+            <li><a href="#retention">8. Data retention</a></li>
+            <li><a href="#security">9. Data security</a></li>
+            <li><a href="#rights">10. Your choices and rights</a></li>
+            <li><a href="#children">11. Children's information</a></li>
+            <li><a href="#international">12. International processing</a></li>
+            <li><a href="#links">13. Third-party links</a></li>
+            <li><a href="#changes">14. Policy changes</a></li>
+            <li><a href="#contact">15. Contact us</a></li>
+          </ol>
+        </aside>
+
+        <article class="policy-card">
+          <div class="policy-intro">
+            <p>
+              In this policy, "Adonis", "we", "us" and "our" refer to Adonis Men's Grooming Salon. "You" refers to any visitor, customer, account holder, job applicant or other person who interacts with our website or services.
+            </p>
+            <div class="notice">
+              <div class="notice-icon" aria-hidden="true">i</div>
+              <p>
+                Please read this policy together with any booking, payment, recruitment or service-specific notice presented when we collect your information. By continuing to use the website or submitting information, you acknowledge the practices described here.
+              </p>
+            </div>
+          </div>
+
+          <div class="policy-content">
+            <section class="policy-section" id="scope">
+              <h2>1. Scope of this policy</h2>
+              <p>This policy applies to personal information collected through:</p>
+              <ul>
+                <li>Our website at <a href="https://www.adonis.com.bd/">www.adonis.com.bd</a> and pages operated under this domain.</li>
+                <li>Online or telephone appointment booking and service enquiries.</li>
+                <li>Customer accounts, online purchases and related support, where available.</li>
+                <li>Contact forms, email, telephone, WhatsApp and social media communications.</li>
+                <li>Career applications and recruitment processes submitted through our website.</li>
+                <li>Feedback, reviews, surveys, promotional activities and customer support.</li>
+              </ul>
+              <p>This policy does not apply to websites, applications or services operated independently by third parties, even when they are linked from our website.</p>
+            </section>
+
+            <section class="policy-section" id="information">
+              <h2>2. Information we collect</h2>
+              <p>Depending on how you interact with Adonis, we may collect the following categories of information.</p>
+
+              <div class="definition-grid">
+                <div class="mini-card">
+                  <strong>Identity and contact information</strong>
+                  <p>Name, email address, telephone number, account details and preferred communication method.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Booking and service information</strong>
+                  <p>Selected service, preferred date and time, branch, staff preference, appointment history and optional comments.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Transaction information</strong>
+                  <p>Order details, billing records, payment status, refunds and purchase history. Full card details are normally handled by payment providers rather than stored by us.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Communications</strong>
+                  <p>Messages, enquiries, complaints, feedback, call notes and correspondence with our team.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Recruitment information</strong>
+                  <p>CV, employment history, education, skills, portfolio, application answers, availability and other information you provide for a job application.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Technical and usage information</strong>
+                  <p>IP address, browser, device type, operating system, pages viewed, referring page, approximate location, cookies and interaction logs.</p>
+                </div>
+              </div>
+
+              <h3>Sensitive information</h3>
+              <p>
+                Please do not submit medical, financial, identification or other sensitive information unless it is reasonably required for a service and requested through an appropriate channel. Where you voluntarily provide such information, we will handle it only for the stated purpose and in accordance with applicable law.
+              </p>
+            </section>
+
+            <section class="policy-section" id="sources">
+              <h2>3. How we collect information</h2>
+              <p>We may collect information:</p>
+              <ul>
+                <li>Directly from you when you complete a form, create an account, book, purchase, apply for a job or communicate with us.</li>
+                <li>Automatically through cookies, server logs and similar website technologies.</li>
+                <li>From service providers that support booking, payment, hosting, analytics, communication, recruitment or customer support.</li>
+                <li>From social media platforms when you interact with our official pages or use a social feature, subject to the platform's settings and policies.</li>
+                <li>From publicly available sources where reasonably necessary for recruitment, fraud prevention or business administration.</li>
+              </ul>
+            </section>
+
+            <section class="policy-section" id="use">
+              <h2>4. How we use your information</h2>
+              <p>We may use personal information to:</p>
+              <ul>
+                <li>Process, confirm, reschedule and manage appointments.</li>
+                <li>Provide grooming services, customer support and requested information.</li>
+                <li>Create and manage customer accounts and purchase records.</li>
+                <li>Process payments, orders, refunds and related administration.</li>
+                <li>Send appointment reminders, service updates and important account notices.</li>
+                <li>Respond to questions, feedback, complaints and support requests.</li>
+                <li>Assess job applications, contact candidates and manage recruitment records.</li>
+                <li>Personalize and improve our website, services, content and customer experience.</li>
+                <li>Measure website performance, understand usage and troubleshoot technical problems.</li>
+                <li>Protect our systems, customers and business against fraud, misuse and security threats.</li>
+                <li>Comply with legal, regulatory, tax, accounting and record-keeping obligations.</li>
+                <li>Send offers or marketing communications where you have consented or where otherwise permitted by applicable law.</li>
+              </ul>
+              <p>
+                We use personal information only where we have a reasonable and lawful purpose, such as performing a requested service, obtaining your consent, meeting a legal obligation or pursuing legitimate business interests that do not override your rights.
+              </p>
+            </section>
+
+            <section class="policy-section" id="cookies">
+              <h2>5. Cookies and analytics</h2>
+              <p>
+                Our website may use cookies, pixels, local storage and similar technologies to remember preferences, keep sessions secure, support booking and shopping features, understand traffic and improve website performance.
+              </p>
+              <h3>Types of cookies we may use</h3>
+              <ul>
+                <li><strong>Essential cookies:</strong> Required for core website, security, account, booking or checkout functionality.</li>
+                <li><strong>Preference cookies:</strong> Remember choices such as language, branch or display preferences.</li>
+                <li><strong>Analytics cookies:</strong> Help us understand page visits, navigation and website performance.</li>
+                <li><strong>Marketing cookies:</strong> May support campaign measurement or relevant advertising, where used and permitted.</li>
+              </ul>
+              <p>
+                You can control cookies through your browser settings. Blocking some cookies may affect booking, login, checkout or other website functions. Where a cookie banner is available, you may also manage non-essential cookie preferences through that tool.
+              </p>
+            </section>
+
+            <section class="policy-section" id="sharing">
+              <h2>6. How we share information</h2>
+              <p>We do not sell your personal information. We may share limited information with:</p>
+              <ul>
+                <li>Adonis branches, authorized staff and business teams that need the information to serve you.</li>
+                <li>Website hosting, maintenance, cloud, email, SMS, booking, payment, analytics, security and customer support providers.</li>
+                <li>Delivery, logistics or commerce partners where an online purchase requires fulfilment.</li>
+                <li>Recruitment service providers or authorized decision-makers involved in evaluating a job application.</li>
+                <li>Professional advisers, auditors, insurers or consultants where reasonably necessary.</li>
+                <li>Government, regulatory, law-enforcement or judicial authorities when required by law or necessary to protect rights, safety and security.</li>
+                <li>A buyer, investor or successor in connection with a merger, restructuring, financing or transfer of all or part of our business, subject to appropriate confidentiality protections.</li>
+              </ul>
+              <p>Service providers may use information only to perform services for us or as otherwise permitted by their own terms and applicable law.</p>
+            </section>
+
+            <section class="policy-section" id="payments">
+              <h2>7. Payments and third-party services</h2>
+              <p>
+                If you make an online payment or use a third-party booking, social, map, messaging or commerce feature, the provider may collect information directly from you. Their handling of that information is governed by their own privacy policy and terms.
+              </p>
+              <p>
+                We encourage you to review the privacy notices of any third-party service before submitting payment or personal information. Adonis is not responsible for the privacy practices of independently operated third-party platforms.
+              </p>
+            </section>
+
+            <section class="policy-section" id="retention">
+              <h2>8. How long we keep information</h2>
+              <p>
+                We retain personal information only for as long as reasonably necessary for the purpose for which it was collected, including to provide services, maintain records, resolve disputes, enforce agreements and satisfy legal, accounting or security requirements.
+              </p>
+              <p>
+                Retention periods may vary by record type. For example, booking and transaction records may be retained for business and accounting purposes, while unsuccessful recruitment records may be kept for a limited period unless you agree to a longer talent-pool retention period. When information is no longer required, we may securely delete, anonymize or aggregate it.
+              </p>
+            </section>
+
+            <section class="policy-section" id="security">
+              <h2>9. Data security</h2>
+              <p>
+                We use reasonable administrative, technical and organizational safeguards designed to protect personal information against unauthorized access, alteration, disclosure, loss or misuse. These safeguards may include access controls, secure hosting, encrypted connections, software updates, backups and staff confidentiality requirements.
+              </p>
+              <p>
+                No internet transmission or storage system is completely secure. You are responsible for keeping account credentials confidential and for notifying us promptly if you suspect unauthorized use of your account or personal information.
+              </p>
+            </section>
+
+            <section class="policy-section" id="rights">
+              <h2>10. Your choices and rights</h2>
+              <p>Subject to applicable law and appropriate identity verification, you may ask us to:</p>
+              <ul>
+                <li>Confirm whether we hold personal information about you.</li>
+                <li>Provide access to certain personal information.</li>
+                <li>Correct inaccurate or incomplete information.</li>
+                <li>Delete information that is no longer needed or withdraw consent where processing relies on consent.</li>
+                <li>Object to or request restriction of certain processing.</li>
+                <li>Stop marketing communications at any time.</li>
+              </ul>
+              <p>
+                To unsubscribe from marketing, use the unsubscribe option in the message where available or contact us. Service messages, booking confirmations and legally required notices may still be sent when necessary.
+              </p>
+              <p>
+                Some requests may be limited where retaining or processing information is required by law, needed to complete a requested service, necessary for security or required to establish, exercise or defend legal claims.
+              </p>
+            </section>
+
+            <section class="policy-section" id="children">
+              <h2>11. Children's information</h2>
+              <p>
+                Some Adonis services may be booked for a child or young person by a parent or legal guardian. A parent or guardian should provide and manage any personal information submitted on behalf of a minor. Children should not create accounts, make bookings or submit personal information without appropriate parental or guardian involvement.
+              </p>
+            </section>
+
+            <section class="policy-section" id="international">
+              <h2>12. International processing</h2>
+              <p>
+                Some service providers may store or process information outside Bangladesh. Where this occurs, we take reasonable steps to use providers that maintain appropriate privacy and security protections and to handle transfers in accordance with applicable requirements.
+              </p>
+            </section>
+
+            <section class="policy-section" id="links">
+              <h2>13. Third-party links and social media</h2>
+              <p>
+                Our website may link to social networks, maps, messaging platforms, payment services or other websites. Clicking a third-party link may allow that party to collect information about you. We do not control those services and recommend reviewing their privacy policies before interacting with them.
+              </p>
+            </section>
+
+            <section class="policy-section" id="changes">
+              <h2>14. Changes to this Privacy Policy</h2>
+              <p>
+                We may update this policy to reflect changes in our services, technology, business practices or legal obligations. The revised policy will be posted on this page with an updated effective date. Material changes may also be communicated through the website or another appropriate channel.
+              </p>
+            </section>
+
+            <section class="policy-section" id="contact">
+              <h2>15. Contact us</h2>
+              <p>For privacy questions, requests or complaints, contact us using the details below:</p>
+              <div class="contact-box">
+                <address>
+                  <strong>Adonis Men's Grooming Salon</strong><br>
+                  Holding 99, Rupayan Golden Age, Road 37, Gulshan Avenue, Dhaka 1212, Bangladesh<br>
+                  Email: <a href="mailto:contact@adonis.com.bd">contact@adonis.com.bd</a><br>
+                  Phone: <a href="tel:+8801919700800">+880 1919-700800</a>
+                </address>
+              </div>
+              <p style="margin-top: 18px;">
+                Please include enough information for us to identify the relevant record and understand your request. We may ask for additional verification before disclosing, correcting or deleting personal information.
+              </p>
+            </section>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <img src="data:image/png;base64,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" alt="Adonis Men's Grooming Salon">
+        <p>With expert stylists, a relaxing ambience and premium service, Adonis is where style meets sophistication.</p>
+      </div>
+
+      <div>
+        <h2 class="footer-title">Useful links</h2>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="/about">About Us</a>
+          <a href="/services/gulshan">Services</a>
+          <a href="/career">Careers</a>
+          <a href="/privacy-policy" aria-current="page">Privacy Policy</a>
+        </nav>
+      </div>
+
+      <div class="footer-contact">
+        <h2 class="footer-title">Contact</h2>
+        <p>Holding 99, Rupayan Golden Age, Road 37, Gulshan Avenue, Dhaka 1212</p>
+        <p><a href="mailto:contact@adonis.com.bd">contact@adonis.com.bd</a></p>
+        <p><a href="tel:+8801919700800">+880 1919-700800</a></p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <span>© <span id="current-year">2026</span> Adonis Men's Grooming Salon. All rights reserved.</span>
+        <span>Privacy-first grooming experience.</span>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+
+  <script>
+    (() => {
+      const menuButton = document.querySelector('.menu-toggle');
+      const navWrap = document.querySelector('.nav-wrap');
+      const tocButton = document.querySelector('.toc-heading');
+      const tocList = document.querySelector('.toc-list');
+      const backToTop = document.querySelector('.back-to-top');
+      const tocLinks = [...document.querySelectorAll('.toc-list a')];
+      const sections = tocLinks
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+      menuButton?.addEventListener('click', () => {
+        const open = menuButton.getAttribute('aria-expanded') === 'true';
+        menuButton.setAttribute('aria-expanded', String(!open));
+        navWrap?.classList.toggle('is-open', !open);
+      });
+
+      tocButton?.addEventListener('click', () => {
+        if (window.innerWidth > 980) return;
+        const open = tocButton.getAttribute('aria-expanded') === 'true';
+        tocButton.setAttribute('aria-expanded', String(!open));
+        tocList?.classList.toggle('is-open', !open);
+      });
+
+      tocLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 980) {
+            tocButton?.setAttribute('aria-expanded', 'false');
+            tocList?.classList.remove('is-open');
+          }
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          tocLinks.forEach(link => {
+            link.classList.toggle('is-active', link.getAttribute('href') === `#${entry.target.id}`);
+          });
+        });
+      }, { rootMargin: '-22% 0px -68% 0px', threshold: 0 });
+
+      sections.forEach(section => observer.observe(section));
+
+      const updateBackToTop = () => {
+        backToTop?.classList.toggle('is-visible', window.scrollY > 500);
+      };
+
+      window.addEventListener('scroll', updateBackToTop, { passive: true });
+      updateBackToTop();
+
+      backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
