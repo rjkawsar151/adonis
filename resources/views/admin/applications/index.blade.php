@@ -127,6 +127,7 @@
                             <th class="px-6 py-4">Reference</th>
                             <th class="px-6 py-4">Applicant</th>
                             <th class="px-6 py-4">Job Opening</th>
+                            <th class="px-6 py-4">Expected Salary</th>
                             <th class="px-6 py-4">Applied Date</th>
                             <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4 text-right">Actions</th>
@@ -150,6 +151,13 @@
                                     <div class="font-semibold text-gray-300">{{ $app->career->title }}</div>
                                     <div class="text-xs text-[#C9A84C] mt-0.5 uppercase tracking-wider font-semibold">{{ $app->career->department ? $app->career->department->name : 'N/A' }}</div>
                                 </td>
+                                <td class="px-6 py-4 font-mono text-xs text-white">
+                                    @if($app->expected_salary)
+                                        {{ number_format($app->expected_salary) }} BDT
+                                    @else
+                                        <span class="text-gray-600">N/A</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-xs text-gray-400">
                                     {{ $app->created_at->format('Y-m-d H:i') }}
                                 </td>
@@ -161,17 +169,26 @@
                                     @elseif($app->status === 'shortlisted')
                                         <span class="text-[10px] font-bold bg-green-900/30 text-green-400 px-2 py-0.5 border border-green-800/50 uppercase">Shortlisted</span>
                                     	@elseif($app->status === 'selected')
-                                        <span class="text-[10px] font-bold bg-green-500/10 text-green-400 px-2 py-0.5 border border-green-500/20 uppercase">Selected</span>
+                                         <span class="text-[10px] font-bold bg-green-500/10 text-green-400 px-2 py-0.5 border border-green-500/20 uppercase">Selected</span>
                                     @elseif($app->status === 'rejected')
                                         <span class="text-[10px] font-bold bg-red-900/30 text-red-400 px-2 py-0.5 border border-red-800/50 uppercase">Rejected</span>
                                     @else
                                         <span class="text-[10px] font-bold bg-gray-800 text-gray-500 px-2 py-0.5 uppercase">{{ str_replace('_', ' ', $app->status) }}</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-right space-x-1">
+                                <td class="px-6 py-4 text-right space-x-1 whitespace-nowrap">
                                     <button type="button" onclick="openCvModal('{{ route('admin.applications.view-cv', $app->id) }}', '{{ addslashes($app->full_name) }}', '{{ route('admin.applications.show', $app->id) }}', '{{ route('admin.applications.download-cv', $app->id) }}')" class="inline-flex items-center justify-center w-8 h-8 bg-gray-800 text-gray-400 hover:bg-[#C9A84C] hover:text-black transition-colors" title="View CV">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     </button>
+                                    @if($app->cover_letter)
+                                        <button type="button" data-name="{{ $app->full_name }}" data-cover-letter="{{ $app->cover_letter }}" onclick="openCoverLetterModal(this)" class="inline-flex items-center justify-center w-8 h-8 bg-gray-800 text-gray-400 hover:bg-[#C9A84C] hover:text-black transition-colors" title="View Cover Letter">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                        </button>
+                                    @else
+                                        <button type="button" class="inline-flex items-center justify-center w-8 h-8 bg-gray-800/40 text-gray-700 cursor-not-allowed" title="No Cover Letter" disabled>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('admin.applications.download-cv', $app->id) }}" class="inline-flex items-center justify-center w-8 h-8 bg-gray-800 text-gray-400 hover:bg-blue-600 hover:text-white transition-colors" title="Download CV">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                                     </a>
@@ -190,7 +207,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="px-6 py-12 text-center text-gray-600">No applications matching the filters.</td></tr>
+                            <tr><td colspan="8" class="px-6 py-12 text-center text-gray-600">No applications matching the filters.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -263,10 +280,26 @@
         document.body.style.overflow = '';
     }
 
+    function openCoverLetterModal(btn) {
+        const name = btn.getAttribute('data-name');
+        const text = btn.getAttribute('data-cover-letter');
+        document.getElementById('cl-modal-title').innerText = name;
+        document.getElementById('cl-viewer-body').innerText = text;
+        document.getElementById('cl-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCoverLetterModal() {
+        document.getElementById('cl-modal').classList.add('hidden');
+        document.getElementById('cl-viewer-body').innerText = '';
+        document.body.style.overflow = '';
+    }
+
     // Close modal on Escape press
     window.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeCvModal();
+            closeCoverLetterModal();
         }
     });
 
@@ -406,6 +439,31 @@
         <!-- Body -->
         <div class="viewer-body">
             <iframe id="cv-viewer-frame" src=""></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Cover Letter Preview Modal -->
+<div id="cl-modal" class="document-viewer-modal hidden">
+    <!-- Overlay background -->
+    <div class="absolute inset-0 transition-opacity bg-transparent" onclick="closeCoverLetterModal()"></div>
+
+    <div class="document-viewer relative z-10 !h-auto max-h-[85vh] !w-[650px] max-w-full">
+        <!-- Header -->
+        <div class="viewer-header">
+            <div class="flex items-center space-x-3">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-white flex items-center">
+                    <span class="text-[#C9A84C] mr-2">Cover Letter:</span> <span id="cl-modal-title">Candidate</span>
+                </h3>
+            </div>
+            <div>
+                <button type="button" onclick="closeCoverLetterModal()" class="px-3 py-1.5 bg-red-900/20 text-red-400 hover:bg-red-900/40 text-[10px] font-semibold uppercase tracking-wider transition-colors border border-red-800/30">Close</button>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="viewer-body p-6 text-gray-300 text-sm leading-relaxed whitespace-pre-wrap font-sans min-h-[180px] max-h-[65vh] overflow-y-auto bg-[#0c0f15]">
+            <p id="cl-viewer-body" class="italic"></p>
         </div>
     </div>
 </div>
