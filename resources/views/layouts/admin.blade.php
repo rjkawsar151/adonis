@@ -37,42 +37,55 @@
             <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                 @php
                     $currentRoute = request()->path();
+                    $user = Auth::user();
                 @endphp
+                
+                @if($user && $user->hasModuleAccess('dashboard'))
                 <a href="{{ url('/admin/dashboard') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'dashboard') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
                     </svg>
                     <span>Dashboard</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('price-list'))
                 <a href="{{ url('/admin/price-list') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'price-list') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                     <span>Services (Catalog)</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('appointments'))
                 <a href="{{ url('/admin/appointments') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'appointments') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span>Appointments</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('memberships'))
                 <a href="{{ url('/admin/memberships') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'memberships') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                     <span>Memberships</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('barbers'))
                 <a href="{{ url('/admin/barbers') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'barbers') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                     <span>Barbers</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('blogs'))
                 <a href="{{ url('/admin/blogs') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ (str_contains($currentRoute, 'blogs') && !str_contains($currentRoute, 'categories') && !str_contains($currentRoute, 'tags') && !str_contains($currentRoute, 'authors')) ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
@@ -93,21 +106,27 @@
                     </a>
                 </div>
                 @endif
+                @endif
 
+                @if($user && $user->hasModuleAccess('faqs'))
                 <a href="{{ url('/admin/faqs') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'faqs') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>FAQs</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('carousel'))
                 <a href="{{ url('/admin/carousel') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'carousel') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span>Carousel</span>
                 </a>
+                @endif
 
+                @if($user && $user->hasModuleAccess('settings'))
                 <a href="{{ url('/admin/settings') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'settings') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -122,8 +141,19 @@
                     </svg>
                     <span>About Page</span>
                 </a>
+                @endif
+
+                @if($user && $user->isAdminRole())
+                <a href="{{ route('admin.users.index') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 {{ str_contains($currentRoute, 'users') ? 'bg-[#C9A84C] text-black shadow-md' : 'hover:bg-gray-800 hover:text-white' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span>Admin Users</span>
+                </a>
+                @endif
 
                 <!-- Careers Group -->
+                @if($user && $user->hasModuleAccess('careers'))
                 <div class="border-t border-gray-800 my-2 pt-2">
                     <span class="px-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest block mb-2">Recruitment</span>
                     
@@ -155,6 +185,7 @@
                         <span>Employment Types</span>
                     </a>
                 </div>
+                @endif
             </nav>
 
             <div class="p-4 border-t border-gray-800 bg-[#0c1017] shrink-0">
@@ -194,13 +225,24 @@
                 </a>
                 <div class="flex items-center space-x-3">
                     @php
-                        $adminName = Auth::check() ? Auth::user()->name : 'Admin';
+                        $authUser = Auth::user();
+                        $adminName = $authUser ? $authUser->name : 'Admin';
                         $adminInitial = strtoupper(substr($adminName, 0, 1));
+                        $roleLabel = match($authUser?->role) {
+                            'super_admin' => 'Super Admin',
+                            'admin' => 'Admin',
+                            'hr' => 'HR Manager',
+                            'content_editor' => 'Content Editor',
+                            default => 'Admin'
+                        };
                     @endphp
                     <div class="w-9 h-9 flex items-center justify-center font-bold text-sm text-[#C9A84C] border border-[#C9A84C]/30">
                         {{ $adminInitial }}
                     </div>
-                    <span class="text-xs font-semibold text-gray-300 hidden md:block">{{ $adminName }}</span>
+                    <div class="hidden md:block text-left">
+                        <span class="text-xs font-semibold text-gray-200 block">{{ $adminName }}</span>
+                        <span class="text-[9px] font-mono text-[#C9A84C] uppercase tracking-wider block">{{ $roleLabel }}</span>
+                    </div>
                 </div>
             </div>
         </header>
@@ -235,16 +277,47 @@
             </div>
             
             <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1.5">
+                @if($user && $user->hasModuleAccess('dashboard'))
                 <a href="{{ url('/admin/dashboard') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Dashboard</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('price-list'))
                 <a href="{{ url('/admin/price-list') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Services (Catalog)</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('appointments'))
                 <a href="{{ url('/admin/appointments') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Appointments</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('memberships'))
                 <a href="{{ url('/admin/memberships') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Memberships</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('barbers'))
                 <a href="{{ url('/admin/barbers') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Barbers</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('blogs'))
                 <a href="{{ url('/admin/blogs') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Blogs</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('faqs'))
                 <a href="{{ url('/admin/faqs') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">FAQs</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('carousel'))
                 <a href="{{ url('/admin/carousel') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Carousel</a>
+                @endif
+
+                @if($user && $user->hasModuleAccess('settings'))
                 <a href="{{ url('/admin/settings') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Settings</a>
+                @endif
+
+                @if($user && $user->isAdminRole())
+                <a href="{{ route('admin.users.index') }}" class="flex items-center space-x-3 py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 hover:text-white">Admin Users</a>
+                @endif
                 
+                @if($user && $user->hasModuleAccess('careers'))
                 <div class="border-t border-gray-800 my-2 pt-2">
                     <span class="px-4 text-[9px] font-mono text-gray-500 uppercase tracking-widest block mb-1">Recruitment</span>
                     <a href="{{ url('/admin/careers') }}" class="flex items-center space-x-3 py-2 px-4 rounded-xl text-xs font-semibold hover:bg-gray-800 hover:text-white">Job Listings</a>
@@ -252,6 +325,7 @@
                     <a href="{{ url('/admin/departments') }}" class="flex items-center space-x-3 py-2 px-4 rounded-xl text-xs font-semibold hover:bg-gray-800 hover:text-white">Departments</a>
                     <a href="{{ url('/admin/employment-types') }}" class="flex items-center space-x-3 py-2 px-4 rounded-xl text-xs font-semibold hover:bg-gray-800 hover:text-white">Employment Types</a>
                 </div>
+                @endif
             </nav>
 
             <div class="shrink-0 border-t border-gray-800 p-4">

@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
 
   const navItems = [
     { label: 'Services', href: '/services/gulshan' },
-    { label: 'About Us', href: '/about' },
+    { label: 'About Us', href: '/about-us' },
     ...(hasCareers ? [{ label: 'Careers', href: '/career' }] : []),
     { label: 'Locations', href: '/', hash: '#branch-section' }
   ];

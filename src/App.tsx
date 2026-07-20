@@ -117,7 +117,7 @@ export default function App() {
   const [selectedBarberDetail, setSelectedBarberDetail] = useState<Barber | null>(null);
 
   // Lazy map loading state & ref
-  const [isMapVisible, setIsMapVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(true);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   // Amenity carousel state
@@ -265,6 +265,39 @@ export default function App() {
     const fbq = (window as any).fbq;
     if (fbq) {
       fbq('track', 'PageView');
+    }
+  }, [currentPath]);
+
+  // Helper to determine if a path is recognized
+  const isKnownRoute = (path: string) => {
+    const lower = path.toLowerCase();
+    return (
+      lower === '/' ||
+      lower === '' ||
+      lower === '/services/gulshan' ||
+      lower === '/services/bashundhara' ||
+      lower === '/about-us' ||
+      lower === '/blog' ||
+      lower.startsWith('/blog/') ||
+      lower === '/career' ||
+      lower.startsWith('/career/') ||
+      lower === '/booking-confirmation' ||
+      lower === '/privacy-policy'
+    );
+  };
+
+  // Sync routing state and handle redirects
+  useEffect(() => {
+    const lower = currentPath.toLowerCase();
+    if (lower === '/services' || lower === '/services/') {
+      window.history.replaceState({}, '', '/services/Gulshan');
+      setCurrentPath('/services/Gulshan');
+    } else if (lower === '/about' || lower === '/about/') {
+      window.history.replaceState({}, '', '/about-us');
+      setCurrentPath('/about-us');
+    } else if (!isKnownRoute(currentPath)) {
+      window.history.replaceState({}, '', '/');
+      setCurrentPath('/');
     }
   }, [currentPath]);
 
@@ -426,7 +459,7 @@ export default function App() {
                 <li><a href="/" onClick={(e) => { e.preventDefault(); navigateTo('/'); }} className="hover:text-gold-400 transition-colors">Lounge</a></li>
                 <li><a href="/services/gulshan" onClick={(e) => { e.preventDefault(); navigateTo('/services/gulshan'); }} className="hover:text-gold-400 transition-colors">Gulshan Services</a></li>
                 <li><a href="/services/bashundhara" onClick={(e) => { e.preventDefault(); navigateTo('/services/bashundhara'); }} className="hover:text-gold-400 transition-colors">Bashundhara Services</a></li>
-                <li><a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="hover:text-gold-400 transition-colors">About Us</a></li>
+                <li><a href="/about-us" onClick={(e) => { e.preventDefault(); navigateTo('/about-us'); }} className="hover:text-gold-400 transition-colors">About Us</a></li>
                 <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="hover:text-gold-400 transition-colors">Blog</a></li>
                 <li><a href="/career" onClick={(e) => { e.preventDefault(); navigateTo('/career'); }} className="hover:text-gold-400 transition-colors">Careers</a></li>
                 <li><a href="/privacy-policy" className="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
@@ -484,8 +517,9 @@ export default function App() {
   };
 
   // 1. SERVICES PAGE ROUTE
-  if (currentPath === '/services' || currentPath === '/services/gulshan' || currentPath === '/services/bashundhara') {
-    const serviceBranch = currentPath === '/services/bashundhara' ? 'bashundhara' : 'gulshan';
+  const lowerPath = currentPath.toLowerCase();
+  if (lowerPath === '/services/gulshan' || lowerPath === '/services/bashundhara') {
+    const serviceBranch = lowerPath.includes('bashundhara') ? 'bashundhara' : 'gulshan';
     return (
       <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
         <Header />
@@ -509,7 +543,7 @@ export default function App() {
   }
 
   // 2. ABOUT US PAGE ROUTE
-  if (currentPath === '/about') {
+  if (currentPath === '/about-us') {
     return (
       <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
         <Header />
@@ -582,17 +616,9 @@ export default function App() {
     );
   }
 
-  // 4. FALLBACK 404 ROUTE
+  // 4. FALLBACK REDIRECT LOADER
   if (currentPath !== '/' && currentPath !== '') {
-    return (
-      <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
-        <Header />
-        <Suspense fallback={<PageLoader />}>
-        <NotFoundPage />
-        </Suspense>
-        {renderFooter()}
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // 5. LANDING PAGE ROUTE (Default `/`)
@@ -762,17 +788,17 @@ export default function App() {
               ref={featuredScrollRef}
               onMouseEnter={() => setFeaturedHover(true)}
               onMouseLeave={() => setFeaturedHover(false)}
-              className="flex gap-5 overflow-x-auto pb-3 px-0.5 snap-x snap-mandatory"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              className="flex gap-4 md:gap-5 overflow-x-auto pb-4 pt-1 px-4 md:px-0.5 snap-x snap-mandatory -mx-4 md:mx-0 touch-pan-x"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
             >
               {featuredServices.map((service, idx) => (
                 <motion.div
                   key={service.id}
-                  initial={isMobile ? false : { opacity: 0, y: 26, scale: 0.96 }}
-                  whileInView={isMobile ? undefined : { opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={isMobile ? undefined : { duration: 0.75, delay: Math.min(idx, 5) * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex-shrink-0 w-72 bg-[#141414] hover:bg-[#1C1C1C] border-l-2 border-transparent hover:border-[#32BBED] p-6 flex flex-col justify-between transition-colors duration-300 relative group h-[290px] text-left border-y border-r border-white/5 hover:border-y-white/10 hover:border-r-white/10 snap-start"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.05 }}
+                  transition={{ duration: 0.5, delay: Math.min(idx, 4) * 0.04 }}
+                  className="flex-shrink-0 w-[82vw] max-w-[300px] md:w-72 bg-[#141414] hover:bg-[#1C1C1C] border-l-2 border-transparent hover:border-[#32BBED] p-5 md:p-6 flex flex-col justify-between transition-colors duration-300 relative group min-h-[290px] text-left border-y border-r border-white/5 hover:border-y-white/10 hover:border-r-white/10 snap-start"
                 >
                   <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-gold-400/0 group-hover:via-gold-400/60 to-transparent transition-all duration-500"></div>
 
@@ -1005,7 +1031,7 @@ export default function App() {
 
           <div className="text-center pt-4">
             <button
-              onClick={() => navigateTo('/about')}
+              onClick={() => navigateTo('/about-us')}
               className="inline-flex items-center gap-1.5 border-b border-gold-400 py-1 text-gold-400 hover:text-white hover:border-white transition-all text-xs font-serif uppercase tracking-widest cursor-pointer"
             >
               Meet Dynamic Stylist Biographies & Gallery
@@ -1226,6 +1252,7 @@ export default function App() {
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveMapId(branch.id as any);
+                          setIsMapVisible(true);
                           document.getElementById('branch-maps-container')?.scrollIntoView({ behavior: 'smooth' });
                         }}
                         className="px-4 py-1.5 border border-white/10 text-white hover:border-gold-400/50 text-[10px] font-sans uppercase tracking-widest transition-colors"
@@ -1238,25 +1265,20 @@ export default function App() {
               })}
             </div>
 
-            <div id="branch-maps-container" ref={mapContainerRef} className="lg:col-span-7 border border-white/10 p-2 bg-salon-black h-[350px] md:h-[450px] relative">
-              <div className="absolute top-4 left-4 z-10 bg-salon-black/95 px-3 py-1.5 border border-gold-400/30 text-[9px] font-mono uppercase tracking-widest text-gold-400">
+            <div id="branch-maps-container" className="lg:col-span-7 border border-white/10 p-2 bg-salon-black h-[350px] md:h-[450px] relative">
+              <div className="absolute top-4 left-4 z-10 bg-salon-black/95 px-3 py-1.5 border border-gold-400/30 text-[9px] font-mono uppercase tracking-widest text-gold-400 shadow-md">
                 Live Location Terminal • {activeMapId === 'gulshan' ? 'Gulshan Golden Age' : 'Bashundhara Studio'}
               </div>
-              {isMapVisible ? (
-                <iframe
-                  src={BRANCHES.find(b => b.id === activeMapId)?.googleMapEmbed}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) opacity(85%) text-shadow(0 0 5px #000)' }}
-                  allowFullScreen={false}
-                  loading="eager"
-                  title="Adonis Dhaka Maps View"
-                ></iframe>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-salon-black text-gray-500 font-mono text-xs">
-                  Interactive map loading...
-                </div>
-              )}
+              <iframe
+                key={activeMapId}
+                src={BRANCHES.find(b => b.id === activeMapId)?.googleMapEmbed}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={false}
+                loading="eager"
+                title="Adonis Dhaka Maps View"
+              ></iframe>
             </div>
           </div>
         </div>
