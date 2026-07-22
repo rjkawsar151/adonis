@@ -282,7 +282,9 @@ export default function App() {
       lower === '/career' ||
       lower.startsWith('/career/') ||
       lower === '/booking-confirmation' ||
-      lower === '/privacy-policy'
+      lower === '/privacy-policy' ||
+      lower === '/book' ||
+      lower === '/booking'
     );
   };
 
@@ -345,20 +347,14 @@ export default function App() {
     setSelectedServiceId(serviceId);
     setSelectedBookingBranchId(branchId);
     setSelectedBarberId(''); // Reset barber if service is chosen directly
-    const element = document.getElementById('booking-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('/book');
   };
 
   const handleBarberBookingBridge = (barberId: string) => {
     setSelectedBarberId(barberId);
     setSelectedServiceId(''); // Reset service if barber is chosen directly
     setSelectedBookingBranchId('gulshan');
-    const element = document.getElementById('booking-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('/book');
   };
 
   const handleVipSubmit = (e: React.FormEvent) => {
@@ -463,7 +459,7 @@ export default function App() {
                 <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="hover:text-gold-400 transition-colors">Blog</a></li>
                 <li><a href="/career" onClick={(e) => { e.preventDefault(); navigateTo('/career'); }} className="hover:text-gold-400 transition-colors">Careers</a></li>
                 <li><a href="/privacy-policy" className="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
-                <li><a href="/#booking-section" onClick={(e) => { e.preventDefault(); navigateTo('/'); setTimeout(() => { document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' }); }, 200); }} className="hover:text-gold-400 transition-colors">Booking</a></li>
+                <li><a href="/book" onClick={(e) => { e.preventDefault(); navigateTo('/book'); }} className="hover:text-gold-400 transition-colors">Booking</a></li>
               </ul>
             </div>
             <div>
@@ -518,6 +514,46 @@ export default function App() {
 
   // 1. SERVICES PAGE ROUTE
   const lowerPath = currentPath.toLowerCase();
+  
+  if (lowerPath === '/book' || lowerPath === '/booking') {
+    return (
+      <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
+        <Header />
+        <div className="py-28 min-h-screen bg-salon-black text-white relative overflow-x-hidden">
+          {/* Ambient glows */}
+          <div className="absolute top-[8%] left-[-8%] h-[500px] w-[500px] rounded-full bg-gold-400/4 blur-[130px] pointer-events-none" />
+          <div className="absolute bottom-[15%] right-[-8%] h-[500px] w-[500px] rounded-full bg-gold-400/4 blur-[130px] pointer-events-none" />
+
+          <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 space-y-12">
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <span className="text-[10px] font-mono tracking-[0.3em] text-gold-400 uppercase block">
+                Sovereign Slot Reservation
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl uppercase tracking-wider text-white">
+                Secure Your Session
+              </h1>
+              <p className="text-xs text-gray-400">
+                Complete our secure reservation checklist. Your transformation begins with one appointment. Open everyday in Dhaka.
+              </p>
+            </div>
+
+            <Suspense fallback={<div className="h-40 flex items-center justify-center text-gray-500 font-mono text-xs">Loading Reservation Deck...</div>}>
+              <BookingForm
+                initialBranchId={selectedBookingBranchId}
+                initialServiceId={selectedServiceId}
+                initialBarberId={selectedBarberId}
+                barbers={barbers}
+                services={services}
+                onBookingSuccess={(booking) => setBookings(prev => [booking, ...prev].slice(0, 50))}
+              />
+            </Suspense>
+          </div>
+        </div>
+        {renderFooter()}
+      </div>
+    );
+  }
+
   if (lowerPath === '/services/gulshan' || lowerPath === '/services/bashundhara') {
     const serviceBranch = lowerPath.includes('bashundhara') ? 'bashundhara' : 'gulshan';
     return (
@@ -530,10 +566,7 @@ export default function App() {
             setSelectedServiceId(serviceId);
             setSelectedBookingBranchId(branchId);
             setSelectedBarberId('');
-            navigateTo('/');
-            setTimeout(() => {
-              document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' });
-            }, 250);
+            navigateTo('/book');
           }}
         />
         </Suspense>
@@ -553,10 +586,7 @@ export default function App() {
           onBookBarber={(barberId) => {
             setSelectedBarberId(barberId);
             setSelectedServiceId('');
-            navigateTo('/');
-            setTimeout(() => {
-              document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' });
-            }, 250);
+            navigateTo('/book');
           }}
         />
         </Suspense>
@@ -686,10 +716,10 @@ export default function App() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
             <a
-              href="#booking-section"
+              href="/book"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' });
+                navigateTo('/book');
               }}
               className="w-full sm:w-auto px-10 py-4 bg-[#32BBED] text-black hover:bg-[#b08d3c] font-serif text-xs font-bold uppercase tracking-widest transition-all duration-300 text-center cursor-pointer shadow-[0_4px_25px_rgba(200,162,74,0.2)]"
             >

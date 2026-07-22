@@ -490,7 +490,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ posts: fallbackPosts, slug }
                 <h4 className="font-serif text-sm uppercase tracking-wider text-white">Experience luxury Grooming</h4>
                 <p className="text-[10px] text-gray-400 leading-relaxed font-light">Book your private styling suite session at our Gulshan or Bashundhara lounge terminals.</p>
                 <button
-                  onClick={() => { navigateTo('/'); setTimeout(() => document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' }), 250); }}
+                  onClick={() => navigateTo('/book')}
                   className="w-full py-2 bg-[#32BBED] hover:bg-gold-400 text-black text-[10px] font-serif uppercase font-bold tracking-widest transition-all cursor-pointer text-center block"
                 >
                   Book Appointment Now
