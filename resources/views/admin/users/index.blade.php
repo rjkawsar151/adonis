@@ -46,6 +46,7 @@
                     <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="hr" {{ request('role') === 'hr' ? 'selected' : '' }}>HR Manager</option>
                     <option value="content_editor" {{ request('role') === 'content_editor' ? 'selected' : '' }}>Content Editor</option>
+                    <option value="reception" {{ request('role') === 'reception' ? 'selected' : '' }}>Receptionist</option>
                 </select>
             </div>
             <div class="sm:col-span-2 md:col-span-3 flex items-center gap-2">
@@ -90,6 +91,8 @@
                                     <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg text-[10px] font-bold uppercase tracking-wider">HR Manager</span>
                                 @elseif($user->role === 'content_editor')
                                     <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg text-[10px] font-bold uppercase tracking-wider">Content Editor</span>
+                                @elseif($user->role === 'reception')
+                                    <span class="px-2.5 py-1 bg-pink-500/10 text-pink-400 border border-pink-500/30 rounded-lg text-[10px] font-bold uppercase tracking-wider">Receptionist</span>
                                 @else
                                     <span class="px-2.5 py-1 bg-gray-500/10 text-gray-400 border border-gray-500/30 rounded-lg text-[10px] font-bold uppercase tracking-wider">{{ $user->role }}</span>
                                 @endif

@@ -233,6 +233,7 @@
                             'admin' => 'Admin',
                             'hr' => 'HR Manager',
                             'content_editor' => 'Content Editor',
+                            'reception' => 'Receptionist',
                             default => 'Admin'
                         };
                     @endphp

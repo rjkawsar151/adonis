@@ -59,7 +59,7 @@
                     @endforeach
                 </select>
                 <p class="text-[11px] text-gray-500 mt-2">
-                    Note: Content Editors only have access to Blog Management. HR Managers only have access to Recruitment modules.
+                    Note: Content Editors only have access to Blog Management. HR Managers only have access to Recruitment modules. Receptionists only have access to Appointments & Memberships.
                 </p>
                 @error('role')
                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>

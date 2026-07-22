@@ -39,6 +39,7 @@ class UserController extends Controller
             'admin' => 'Admin (Site & Operations Manager)',
             'hr' => 'HR Manager (Careers & Applications Access)',
             'content_editor' => 'Content Editor (Blog & Articles Access Only)',
+            'reception' => 'Receptionist (Appointments & Memberships Access Only)',
         ];
 
         if (!Auth::user()->isSuperAdmin()) {
@@ -50,7 +51,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $allowedRoles = ['admin', 'hr', 'content_editor'];
+        $allowedRoles = ['admin', 'hr', 'content_editor', 'reception'];
         if (Auth::user()->isSuperAdmin()) {
             $allowedRoles[] = 'super_admin';
         }
@@ -81,6 +82,7 @@ class UserController extends Controller
             'admin' => 'Admin (Site & Operations Manager)',
             'hr' => 'HR Manager (Careers & Applications Access)',
             'content_editor' => 'Content Editor (Blog & Articles Access Only)',
+            'reception' => 'Receptionist (Appointments & Memberships Access Only)',
         ];
 
         if (!Auth::user()->isSuperAdmin()) {
@@ -96,7 +98,7 @@ class UserController extends Controller
             return redirect()->route('admin.users.index')->with('error', 'Only a Super Admin can modify a Super Admin account.');
         }
 
-        $allowedRoles = ['admin', 'hr', 'content_editor'];
+        $allowedRoles = ['admin', 'hr', 'content_editor', 'reception'];
         if (Auth::user()->isSuperAdmin()) {
             $allowedRoles[] = 'super_admin';
         }

@@ -103,6 +103,7 @@
             </form>
         </div>
 
+        @if(!Auth::user()->isReception())
         <!-- Delete -->
         <div class="bg-[#111827] border border-red-900/50 p-6">
             <h3 class="font-extrabold text-sm text-red-400 uppercase tracking-wider border-b border-red-900/30 pb-3 mb-4">Danger Zone</h3>
@@ -114,6 +115,7 @@
                 </button>
             </form>
         </div>
+        @endif
     </div>
 </div>
 @endsection

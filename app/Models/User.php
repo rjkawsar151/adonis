@@ -64,6 +64,11 @@ class User extends Authenticatable
         return $this->role === 'content_editor';
     }
 
+    public function isReception(): bool
+    {
+        return $this->role === 'reception';
+    }
+
     public function hasRole(array|string $roles): bool
     {
         $roles = is_array($roles) ? $roles : func_get_args();
@@ -82,6 +87,10 @@ class User extends Authenticatable
 
         if ($this->role === 'content_editor') {
             return in_array($module, ['dashboard', 'blogs', 'blog-categories', 'blog-tags', 'blog-authors']);
+        }
+
+        if ($this->role === 'reception') {
+            return in_array($module, ['dashboard', 'appointments', 'memberships']);
         }
 
         return false;

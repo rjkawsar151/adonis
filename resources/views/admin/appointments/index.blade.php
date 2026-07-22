@@ -39,7 +39,9 @@
                 <option value="confirmed">Mark as Confirmed</option>
                 <option value="completed">Mark as Completed</option>
                 <option value="cancelled">Mark as Cancelled</option>
+                @if(!Auth::user()->isReception())
                 <option value="delete">Delete Selected</option>
+                @endif
             </select>
             <button type="submit" class="px-4 py-2 bg-gray-800 hover:bg-[#C9A84C] hover:text-black border border-[#C9A84C]/25 text-[#C9A84C] text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap">
                 Execute Bulk

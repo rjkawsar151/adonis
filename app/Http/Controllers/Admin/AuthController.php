@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor'];
+        $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor', 'reception'];
         if (Auth::check() && in_array(Auth::user()->role, $allowedRoles) && Auth::user()->status === 'active') {
             return redirect('/admin/dashboard');
         }
@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor'];
+            $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor', 'reception'];
             
             if (in_array($user->role, $allowedRoles)) {
                 if ($user->status !== 'active') {
@@ -38,12 +38,15 @@ class AuthController extends Controller
 
                 $request->session()->regenerate();
                 
-                // Redirect Content Editor directly to blogs, HR to applications, others to dashboard
+                // Redirect Content Editor directly to blogs, HR to applications, Reception to appointments, others to dashboard
                 if ($user->role === 'content_editor') {
                     return redirect()->intended('/admin/blogs');
                 }
                 if ($user->role === 'hr') {
                     return redirect()->intended('/admin/careers/applications');
+                }
+                if ($user->role === 'reception') {
+                    return redirect()->intended('/admin/appointments');
                 }
 
                 return redirect()->intended('/admin/dashboard');
