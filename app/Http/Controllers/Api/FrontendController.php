@@ -185,15 +185,20 @@ class FrontendController extends Controller
     public function sitemapXml()
     {
         $baseUrl = url('/');
+        if (str_contains($baseUrl, 'localhost') || str_contains($baseUrl, '127.0.0.1')) {
+            $baseUrl = 'https://adonis.com.bd';
+        }
         $xml = '<?xml version="1.0" encoding="UTF-8"?>';
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
         // 1. Static Pages
         $xml .= "<url><loc>{$baseUrl}/</loc><priority>1.0</priority><changefreq>daily</changefreq></url>";
-        $xml .= "<url><loc>{$baseUrl}/services/gulshan</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>";
-        $xml .= "<url><loc>{$baseUrl}/about</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>";
+        $xml .= "<url><loc>{$baseUrl}/services/Gulshan</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>";
+        $xml .= "<url><loc>{$baseUrl}/services/bashundhara</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>";
+        $xml .= "<url><loc>{$baseUrl}/about-us</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>";
         $xml .= "<url><loc>{$baseUrl}/career</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>";
         $xml .= "<url><loc>{$baseUrl}/blog</loc><priority>0.8</priority><changefreq>daily</changefreq></url>";
+        $xml .= "<url><loc>{$baseUrl}/privacy-policy</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>";
 
         // 2. Blog Posts
         $posts = \App\Models\Blog::where('status', 'published')->get();
@@ -211,6 +216,14 @@ class FrontendController extends Controller
         $tags = \App\Models\BlogTag::where('status', true)->get();
         foreach ($tags as $tag) {
             $xml .= "<url><loc>{$baseUrl}/blog/tag/{$tag->slug}</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>";
+        }
+
+        // 5. Careers (Job Listings)
+        if (\Illuminate\Support\Facades\Schema::hasTable('careers')) {
+            $jobs = \App\Models\Career::active()->get();
+            foreach ($jobs as $job) {
+                $xml .= "<url><loc>{$baseUrl}/career/{$job->slug}</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>";
+            }
         }
 
         $xml .= '</urlset>';

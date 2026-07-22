@@ -149,7 +149,9 @@ class CareerController extends Controller
     public function show($id)
     {
         $career = Career::withTrashed()
-            ->with(['department', 'employmentType', 'questions'])
+            ->with(['department', 'employmentType', 'questions', 'applications' => function($q) {
+                $q->withTrashed()->latest();
+            }])
             ->withCount(['applications', 'applications as shortlisted_count' => function($q) {
                 $q->where('status', 'shortlisted');
             }, 'applications as rejected_count' => function($q) {

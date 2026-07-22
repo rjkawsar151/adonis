@@ -310,11 +310,11 @@ export const BlogPage: React.FC<BlogPageProps> = ({ posts: fallbackPosts, slug }
 
           {/* Large cover image */}
           {detailPost.coverImage && (
-            <div className="aspect-[21/9] w-full overflow-hidden border border-white/5 bg-salon-gray relative">
+            <div className="blog-header-image-container aspect-[21/9] w-full max-h-[500px] overflow-hidden border border-white/5 bg-[#050505] relative shrink-0">
               <OptimizedImage
                 src={detailPost.coverImage}
                 alt={detailPost.title}
-                className="w-full h-full object-cover brightness-95"
+                className="w-full h-full object-contain object-center brightness-95 block"
                 width={1600}
                 height={700}
                 sizes="100vw"
@@ -490,7 +490,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ posts: fallbackPosts, slug }
                 <h4 className="font-serif text-sm uppercase tracking-wider text-white">Experience luxury Grooming</h4>
                 <p className="text-[10px] text-gray-400 leading-relaxed font-light">Book your private styling suite session at our Gulshan or Bashundhara lounge terminals.</p>
                 <button
-                  onClick={() => { navigateTo('/'); setTimeout(() => document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' }), 250); }}
+                  onClick={() => navigateTo('/book')}
                   className="w-full py-2 bg-[#32BBED] hover:bg-gold-400 text-black text-[10px] font-serif uppercase font-bold tracking-widest transition-all cursor-pointer text-center block"
                 >
                   Book Appointment Now
@@ -626,16 +626,16 @@ export const BlogPage: React.FC<BlogPageProps> = ({ posts: fallbackPosts, slug }
             className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-salon-gray/10 border border-white/5 p-6 md:p-8 hover:border-gold-400/20 transition-all text-left"
           >
             {/* Featured Image */}
-            <div className="lg:col-span-7 aspect-[16/9] w-full overflow-hidden bg-salon-black relative group">
+            <div className="lg:col-span-7 blog-featured-image-container aspect-[16/9] w-full max-h-[460px] overflow-hidden bg-[#050505] relative group shrink-0">
               <OptimizedImage
                 src={featuredPost.coverImage}
                 alt={featuredPost.title}
-                className="w-full h-full object-cover brightness-90 group-hover:scale-[1.01] transition-transform duration-700"
+                className="w-full h-full object-contain object-center brightness-90 group-hover:scale-[1.01] transition-transform duration-700 block"
                 width={1200}
                 height={700}
                 sizes="(max-width: 640px) 100vw, 700px"
               />
-              <span className="absolute top-4 left-4 bg-gold-400 text-black px-2 py-0.5 text-[8px] font-mono uppercase tracking-widest font-extrabold shadow-lg">
+              <span className="absolute top-4 left-4 bg-gold-400 text-black px-2 py-0.5 text-[8px] font-mono uppercase tracking-widest font-extrabold shadow-lg z-10">
                 Featured Article
               </span>
             </div>
@@ -697,17 +697,17 @@ export const BlogPage: React.FC<BlogPageProps> = ({ posts: fallbackPosts, slug }
                   <button onClick={() => navigateTo(`/blog/${post.slug}`)} className="block w-full text-left flex flex-col h-full justify-between">
                     <div>
                       {/* Featured image */}
-                      <div className="aspect-[16/10] overflow-hidden bg-salon-black relative">
+                      <div className="blog-card-image-container aspect-[16/10] w-full max-h-[250px] overflow-hidden bg-[#050505] relative shrink-0">
                         <OptimizedImage
                           src={post.coverImage}
                           alt={post.title}
-                          className="h-full w-full object-cover brightness-90 group-hover:scale-[1.02] transition-transform duration-500"
+                          className="h-full w-full object-contain object-center brightness-90 group-hover:scale-[1.02] transition-transform duration-500 block"
                           width={600}
                           height={375}
                           sizes="(max-width: 640px) 100vw, 350px"
                         />
                         {post.category && (
-                          <span className="absolute bottom-3 left-3 bg-salon-black/90 px-2 py-0.5 border border-gold-400/20 text-[8px] font-mono text-gold-400 tracking-wider">
+                          <span className="absolute bottom-3 left-3 bg-salon-black/90 px-2 py-0.5 border border-gold-400/20 text-[8px] font-mono text-gold-400 tracking-wider z-10">
                             {post.category.name}
                           </span>
                         )}

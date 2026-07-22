@@ -80,10 +80,7 @@ export const BookingConfirmationPage: React.FC<BookingConfirmationPageProps> = (
             </button>
             <button
               onClick={() => {
-                navigateTo('/');
-                setTimeout(() => {
-                  document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' });
-                }, 250);
+                navigateTo('/book');
               }}
               className="px-6 py-3 bg-salon-gray hover:bg-white/10 border border-white/10 text-white font-serif text-[10px] font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer text-center"
             >

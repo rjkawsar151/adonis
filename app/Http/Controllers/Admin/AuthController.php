@@ -10,7 +10,8 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor'];
+        if (Auth::check() && in_array(Auth::user()->role, $allowedRoles) && Auth::user()->status === 'active') {
             return redirect('/admin/dashboard');
         }
         return view('admin.login');
@@ -25,8 +26,26 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            if ($user->role === 'admin') {
+            $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor'];
+            
+            if (in_array($user->role, $allowedRoles)) {
+                if ($user->status !== 'active') {
+                    Auth::logout();
+                    return back()->withErrors([
+                        'email' => 'Your account has been deactivated. Please contact the administrator.',
+                    ])->onlyInput('email');
+                }
+
                 $request->session()->regenerate();
+                
+                // Redirect Content Editor directly to blogs, HR to applications, others to dashboard
+                if ($user->role === 'content_editor') {
+                    return redirect()->intended('/admin/blogs');
+                }
+                if ($user->role === 'hr') {
+                    return redirect()->intended('/admin/careers/applications');
+                }
+
                 return redirect()->intended('/admin/dashboard');
             }
             

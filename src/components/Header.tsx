@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
 
   const navItems = [
     { label: 'Services', href: '/services/gulshan' },
-    { label: 'About Us', href: '/about' },
+    { label: 'About Us', href: '/about-us' },
     ...(hasCareers ? [{ label: 'Careers', href: '/career' }] : []),
     { label: 'Locations', href: '/', hash: '#branch-section' }
   ];
@@ -135,8 +135,11 @@ export const Header: React.FC = () => {
           {/* Booking Trigger CTA */}
           <div className="hidden lg:block">
             <a
-              href="/#booking-section"
-              onClick={(e) => handleNavClick(e, '/', '#booking-section')}
+              href="/book"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo('/book');
+              }}
               className="px-6 py-2.5 bg-[#32BBED] text-black hover:bg-[#b08d3c] font-serif text-xs font-bold uppercase tracking-widest transition-all duration-350 cursor-pointer shadow-lg shadow-[#32BBED]/10 active:scale-95 text-center block"
             >
               Book Now
@@ -177,8 +180,12 @@ export const Header: React.FC = () => {
                 ))}
                 <div className="pt-2 border-t border-white/5">
                   <a
-                    href="/#booking-section"
-                    onClick={(e) => handleNavClick(e, '/', '#booking-section')}
+                    href="/book"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      navigateTo('/book');
+                    }}
                     className="w-full text-center px-6 py-3 bg-[#32BBED] text-black font-serif text-xs font-bold uppercase tracking-widest transition-all block"
                   >
                     Secure Grooming Slot
