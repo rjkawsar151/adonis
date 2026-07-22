@@ -487,7 +487,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
             </p>
           </div>
           <button
-            onClick={() => { navigateTo('/'); setTimeout(() => document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' }), 250); }}
+            onClick={() => navigateTo('/book')}
             className="shrink-0 border border-gold-400 text-gold-400 py-4 px-10 uppercase text-xs tracking-[0.2em] hover:bg-gold-400 hover:text-black transition-all cursor-pointer font-serif font-black"
           >
             Book Now

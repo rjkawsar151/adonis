@@ -43,4 +43,47 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isAdminRole(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin']);
+    }
+
+    public function isHr(): bool
+    {
+        return $this->role === 'hr';
+    }
+
+    public function isContentEditor(): bool
+    {
+        return $this->role === 'content_editor';
+    }
+
+    public function hasRole(array|string $roles): bool
+    {
+        $roles = is_array($roles) ? $roles : func_get_args();
+        return in_array($this->role, $roles);
+    }
+
+    public function hasModuleAccess(string $module): bool
+    {
+        if (in_array($this->role, ['super_admin', 'admin'])) {
+            return true;
+        }
+
+        if ($this->role === 'hr') {
+            return in_array($module, ['dashboard', 'careers', 'applications', 'departments', 'employment-types']);
+        }
+
+        if ($this->role === 'content_editor') {
+            return in_array($module, ['dashboard', 'blogs', 'blog-categories', 'blog-tags', 'blog-authors']);
+        }
+
+        return false;
+    }
 }

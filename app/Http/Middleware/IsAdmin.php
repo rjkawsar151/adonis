@@ -17,7 +17,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        $allowedRoles = ['super_admin', 'admin', 'hr', 'content_editor'];
+
+        if (Auth::check() && in_array(Auth::user()->role, $allowedRoles) && Auth::user()->status === 'active') {
             return $next($request);
         }
 

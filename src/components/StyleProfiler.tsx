@@ -278,11 +278,6 @@ export const StyleProfiler: React.FC<StyleProfilerProps> = ({ onSelectRecommende
               <button
                 onClick={() => {
                   onSelectRecommendedService(result.service.id);
-                  // scroll to booking form beautifully
-                  const element = document.getElementById('booking-section');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  }
                 }}
                 className="py-3 bg-[#32BBED] hover:bg-[#b08d3c] text-black font-serif text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
               >

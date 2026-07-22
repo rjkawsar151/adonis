@@ -2,8 +2,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Cinzel", serif;
-  --font-sans: "Inter", sans-serif;
+  --font-serif: "Cinzel", "Hind Siliguri", serif;
+  --font-sans: "Inter", "Hind Siliguri", sans-serif;
+  --font-bengali: "Hind Siliguri", sans-serif;
   
   --color-gold-50: #fbf8f0;
   --color-gold-100: #f4ecda;
@@ -19,6 +20,10 @@
   --color-salon-black: #0B0B0B;
   --color-salon-card: #141414;
   --color-salon-gray: #1C1C1C;
+}
+
+body, button, input, textarea, select {
+  font-family: "Inter", "Hind Siliguri", sans-serif;
 }
 
 /* Custom elite transitions & glassmorphism effects */
@@ -159,7 +164,71 @@ section:first-of-type {
 
 .blog-content img {
   width: 100%;
+  max-width: 100%;
   height: auto;
+  max-height: 550px;
+  object-fit: cover;
+  object-position: center;
   margin: 1.5rem 0;
   border: 1px solid rgba(50, 187, 237, 0.2);
+  display: block;
+  overflow: hidden;
+}
+
+/* Blog Post Card & Image Responsive Container Rules */
+.blog-card-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 250px;
+  overflow: hidden;
+  background-color: #050505;
+  flex-shrink: 0;
+}
+
+.blog-card-image-container img,
+.blog-card-image-container picture img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block;
+}
+
+.blog-featured-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 460px;
+  overflow: hidden;
+  background-color: #050505;
+  flex-shrink: 0;
+}
+
+.blog-featured-image-container img,
+.blog-featured-image-container picture img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block;
+}
+
+.blog-header-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  max-height: 500px;
+  overflow: hidden;
+  background-color: #050505;
+  flex-shrink: 0;
+}
+
+.blog-header-image-container img,
+.blog-header-image-container picture img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block;
 }
