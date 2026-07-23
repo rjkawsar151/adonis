@@ -25,12 +25,18 @@
             <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Rating (0–5)</label>
             <input type="number" step="0.1" name="rating" value="{{ old('rating', $barber->rating) }}" min="0" max="5" class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C]">
         </div>
-        <div class="md:col-span-2">
-            <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Portrait Image</label>
-            <input type="file" name="portrait" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp" class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C] file:mr-3 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-wider file:text-black file:bg-[#C9A84C] file:cursor-pointer hover:file:bg-[#b8973f]">
+        <div class="md:col-span-2 space-y-4">
+            <div>
+                <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Portrait Image (Upload)</label>
+                <input type="file" name="portrait" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp" class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C] file:mr-3 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-wider file:text-black file:bg-[#C9A84C] file:cursor-pointer hover:file:bg-[#b8973f]">
+            </div>
+            <div>
+                <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Or Portrait Image URL</label>
+                <input type="text" name="portrait_url" value="{{ old('portrait_url', $barber->portraitUrl) }}" placeholder="e.g. /assets/images/dulal_chandra.png" class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C]">
+            </div>
             @if($barber->portraitUrl)
                 <div class="mt-2 w-20 h-24 border border-gray-700 overflow-hidden bg-black" id="current-portrait">
-                    <img src="{{ asset($barber->portraitUrl) }}" alt="Current" class="h-full w-full object-cover">
+                    <img src="{{ Str::starts_with($barber->portraitUrl, 'http') ? $barber->portraitUrl : asset($barber->portraitUrl) }}" alt="Current" class="h-full w-full object-cover">
                 </div>
             @endif
             <div id="portrait-preview" class="mt-2 hidden w-20 h-24 border border-gray-700 overflow-hidden bg-black">

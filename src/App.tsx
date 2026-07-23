@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { LucideIcon } from './components/LucideIcon';
@@ -40,6 +40,7 @@ import {
   BLOG_POSTS as DEFAULT_BLOG_POSTS,
   COMPLETE_PRICE_LIST as DEFAULT_PRICE_LIST
 } from './data';
+import { GULSHAN_PACKAGES, BASHUNDHARA_PACKAGES } from './data';
 import { Service, Barber, Booking, SiteSettings, SmtpSettings, BlogPost, PriceGroup, PriceListItem } from './types';
 
 const DEFAULT_SETTINGS: SiteSettings = {
@@ -396,8 +397,36 @@ export default function App() {
     setVipEmail('');
   };
 
-  // Show all services in the horizontal scroll section
-  const featuredServices = services;
+  // Combine, format and randomize packages from both branches
+  const featuredServices = useMemo(() => {
+    const gulshan = GULSHAN_PACKAGES.map((pkg) => ({
+      id: `gulshan-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`,
+      name: pkg.name,
+      includes: pkg.includes,
+      priceBDT: pkg.price,
+      originalPrice: pkg.originalPrice,
+      discount: pkg.discount,
+      category: 'pack',
+      icon: pkg.name.toLowerCase().includes('spa') ? 'Flower' : 'Crown',
+      branch_id: 'gulshan' as const
+    }));
+
+    const bashundhara = BASHUNDHARA_PACKAGES.map((pkg) => ({
+      id: `bashundhara-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`,
+      name: pkg.name,
+      includes: pkg.includes,
+      priceBDT: pkg.price,
+      originalPrice: pkg.originalPrice,
+      discount: pkg.discount,
+      category: 'pack',
+      icon: pkg.name.toLowerCase().includes('spa') ? 'Flower' : 'Crown',
+      branch_id: 'bashundhara' as const
+    }));
+
+    const combined = [...gulshan, ...bashundhara];
+    // Shuffle the list
+    return combined.sort(() => Math.random() - 0.5);
+  }, []);
 
   const renderFooter = () => {
     const phones = settings.phoneNumbers || CONTACT_INFO.phoneNumbers || [];
@@ -838,7 +867,7 @@ export default function App() {
                         <LucideIcon name={service.icon} size={20} />
                       </div>
                       <span className="text-[8px] font-mono tracking-widest text-gold-400 uppercase bg-gold-400/10 px-2 py-0.5 border border-gold-400/15">
-                        {service.category === 'pack' ? 'Luxe Package' : 'Featured'}
+                        {service.branch_id === 'bashundhara' ? 'Bashundhara Luxe' : 'Gulshan Luxe'}
                       </span>
                     </div>
 
@@ -846,19 +875,33 @@ export default function App() {
                       <h4 className="font-serif text-sm uppercase tracking-wider text-white font-medium group-hover:text-gold-400 transition-colors line-clamp-1 pb-1">
                         {service.name}
                       </h4>
-                      <p className="text-[11px] text-gray-400 line-clamp-3 font-sans leading-relaxed mt-1">
-                        {service.description}
-                      </p>
+                      <ul className="space-y-1.5 mt-3">
+                        {service.includes.map((item, ii) => (
+                          <li key={ii} className="flex items-start gap-2 text-[10px] text-gray-400 font-sans leading-snug">
+                            <div className="w-1 h-1 bg-gold-400/60 rotate-45 shrink-0 mt-1.5" />
+                            <span className="line-clamp-2">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
 
                   <div className="border-t border-white/5 pt-4 flex items-center justify-between mt-4">
                     <div>
                       <span className="text-[9px] text-gray-500 uppercase font-mono block">Starting from</span>
-                      <span className="text-sm font-serif text-gold-400 font-bold">৳{service.priceBDT}</span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-sm font-serif text-gold-400 font-bold">
+                          {service.priceBDT.startsWith('৳') ? service.priceBDT : `৳${service.priceBDT}`}
+                        </span>
+                        {service.originalPrice && (
+                          <span className="text-[10px] text-gray-500 line-through font-mono">
+                            {service.originalPrice.startsWith('৳') ? service.originalPrice : `৳${service.originalPrice}`}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <button
-                      onClick={() => handleBookingBridge(service.id)}
+                      onClick={() => handleBookingBridge(service.name, service.branch_id)}
                       className="px-4 py-1.5 border border-gold-400/20 text-gold-400 hover:bg-gold-400 hover:text-salon-black text-[10px] font-serif uppercase tracking-widest transition-all duration-300 cursor-pointer"
                     >
                       Book Now

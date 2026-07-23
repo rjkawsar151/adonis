@@ -236,7 +236,8 @@ export const TESTIMONIALS: Testimonial[] = [
     rating: 5,
     comment: 'Best barber experience in Dhaka. The Gulshan lounge feels like a 5-star hotel. Tariq perfectly executed my low skin fade with extreme attention to detail and precision!',
     source: 'Gulshan Member',
-    avatarLetter: 'A'
+    avatarLetter: 'A',
+    avatarUrl: assetUrl('/assets/images/dulal_chandra.png')
   },
   {
     id: 'r2',
@@ -613,6 +614,76 @@ export const GULSHAN_PACKAGES: PromoPackage[] = [
     price: '21,000/-',
     originalPrice: '23,500/-',
     discount: '2,500/-',
+    includes: ['Pedicure Deluxe', 'Manicure Deluxe', 'Swedish Massage (60 Mins)', 'Royal Body Smoothing Scrub', 'Sauna / Steam with Shower']
+  }
+];
+
+export const BASHUNDHARA_PACKAGES: PromoPackage[] = [
+  {
+    name: 'REGULAR PACKAGE',
+    price: '5,200/-',
+    originalPrice: '6,200/-',
+    discount: '1,000/-',
+    includes: ['Hair Cut', 'Adonis Special Facial', 'Pedicure & Manicure', 'Shave']
+  },
+  {
+    name: 'CLASSIC PACKAGE',
+    price: '9,500/-',
+    originalPrice: '11,100/-',
+    discount: '1,600/-',
+    includes: ['Hair Cut', 'Shave', 'Oil Massage', 'Pedicure & Manicure', 'Janssen Whitening Facial']
+  },
+  {
+    name: 'BRIDEGROOM PACKAGE (Single Day)',
+    price: '19,000/-',
+    originalPrice: '22,200/-',
+    discount: '3,200/-',
+    includes: ['Hair Cutting & Setting', 'Fair Polish (Face+Neck+Hands)', 'Hair Spa', 'Deluxe Pedicure & Manicure', 'Shave', 'Body Shop Vitamin C Facial', 'Personal Room Service', 'Make-Over Art', 'Body Massage']
+  },
+  {
+    name: 'BRIDEGROOM PACKAGE (2 Days)',
+    price: '21,500/-',
+    originalPrice: '24,500/-',
+    discount: '3,000/-',
+    multiday: true,
+    includes: [
+      'Day 1: Hair Cut + Shampoo + Conditioner Wash, Fair Polish Face + Neck + Hands, Hair Spa, Pedicure & Manicure, Shave',
+      'Day 2: Body Massage with Steam Shower, Hair Shining, Body Shop Vitamin E Facial, Make-Over Art, Hair Setting'
+    ]
+  },
+  {
+    name: 'BUSINESS PACKAGE',
+    price: '15,800/-',
+    originalPrice: '18,600/-',
+    discount: '2,800/-',
+    includes: ['Premium Stylish Hair Cut', 'Stylish Beard shaping/Shave', 'Bigen Ammonia Free Color Dye', 'Caring Hair Spa treatment', 'Pedicure & Manicure', 'Body Shop Seaweed Facial', 'Swedish Body Massage (60 Mins)']
+  },
+  {
+    name: 'ROYAL PACKAGE',
+    price: '17,500/-',
+    originalPrice: '20,500/-',
+    discount: '3,000/-',
+    includes: ['Hair Cut', 'Shave', 'Deluxe Pedicure & Manicure', 'Ammonia Free Color (Inova)', 'L’Oréal Hair Spa', 'Gold Facial', 'Body Scrub with Steam']
+  },
+  {
+    name: 'CLASSIC SPA PACKAGE',
+    price: '9,000/-',
+    originalPrice: '10,400/-',
+    discount: '1,400/-',
+    includes: ['Pedicure & Manicure Combo', 'Indian Traditional Massage', 'Steam with Shower', 'Body Polish Scrub']
+  },
+  {
+    name: 'BUSINESS SPA PACKAGE',
+    price: '12,500/-',
+    originalPrice: '13,900/-',
+    discount: '1,400/-',
+    includes: ['Pedicure Deluxe', 'Manicure Deluxe', 'Deep Tissue Body Massage', 'Body Smoothing Scrub', 'Sauna with Shower']
+  },
+  {
+    name: 'PREMIUM SPA PACKAGE',
+    price: '19,000/-',
+    originalPrice: '21,200/-',
+    discount: '2,200/-',
     includes: ['Pedicure Deluxe', 'Manicure Deluxe', 'Swedish Massage (60 Mins)', 'Royal Body Smoothing Scrub', 'Sauna / Steam with Shower']
   }
 ];

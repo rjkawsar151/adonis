@@ -75,6 +75,7 @@ class BlogController extends Controller
             'slug' => 'required|string|max:160|unique:blogs,slug',
             'excerpt' => 'nullable|string',
             'coverImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'coverImage_url' => 'nullable|string|max:2048',
             'contentHtml' => 'nullable|string',
             'seoTitle' => 'nullable|string|max:255',
             'seoDescription' => 'nullable|string',
@@ -93,7 +94,7 @@ class BlogController extends Controller
             'breadcrumb_title' => 'nullable|string',
         ]);
 
-        $coverImage = '';
+        $coverImage = $request->input('coverImage_url') ?? '';
         if ($request->hasFile('coverImage')) {
             $coverImage = $this->uploadAndOptimizeImage($request->file('coverImage'));
         }
@@ -162,6 +163,7 @@ class BlogController extends Controller
             'slug' => 'required|string|max:160|unique:blogs,slug,' . $id . ',id',
             'excerpt' => 'nullable|string',
             'coverImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'coverImage_url' => 'nullable|string|max:2048',
             'contentHtml' => 'nullable|string',
             'seoTitle' => 'nullable|string|max:255',
             'seoDescription' => 'nullable|string',
@@ -220,10 +222,12 @@ class BlogController extends Controller
         ];
 
         if ($request->hasFile('coverImage')) {
-            if ($blog->coverImage && File::exists(public_path($blog->coverImage))) {
+            if ($blog->coverImage && File::exists(public_path($blog->coverImage)) && !str_starts_with($blog->coverImage, 'http')) {
                 File::delete(public_path($blog->coverImage));
             }
             $data['coverImage'] = $this->uploadAndOptimizeImage($request->file('coverImage'));
+        } elseif ($request->has('coverImage_url')) {
+            $data['coverImage'] = $request->input('coverImage_url') ?? '';
         }
 
         $blog->update($data);

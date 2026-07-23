@@ -89,9 +89,17 @@ export const ReviewCarousel: React.FC<ReviewCarouselProps> = ({ testimonials }) 
               </div>
 
               <div className="border-t border-white/5 pt-4 flex items-center gap-3 text-left">
-                <div className="h-8 w-8 rounded-full bg-gold-400/10 border border-gold-400/25 flex items-center justify-center font-serif text-xs font-bold text-gold-400">
-                  {t.avatarLetter}
-                </div>
+                {t.avatarUrl ? (
+                  <img
+                    src={t.avatarUrl}
+                    alt={t.author}
+                    className="h-8 w-8 rounded-full object-cover border border-gold-400/25 shrink-0"
+                  />
+                ) : (
+                  <div className="h-8 w-8 rounded-full bg-gold-400/10 border border-gold-400/25 flex items-center justify-center font-serif text-xs font-bold text-gold-400 shrink-0">
+                    {t.avatarLetter}
+                  </div>
+                )}
                 <div>
                   <h5 className="text-xs font-serif uppercase tracking-wide text-white">{t.author}</h5>
                   <span className="text-[9px] text-gray-500 font-mono uppercase tracking-widest block">{t.source}</span>

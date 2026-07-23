@@ -36,6 +36,7 @@ export interface Testimonial {
   comment: string;
   source: string;
   avatarLetter: string;
+  avatarUrl?: string;
 }
 
 export interface Booking {

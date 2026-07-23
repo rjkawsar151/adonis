@@ -216,12 +216,14 @@
                         <hr>
 
                         <div class="form-group">
-                            <label class="font-weight-bold">Featured Image</label>
+                            <label class="font-weight-bold">Featured Image (Upload)</label>
                             <input type="file" name="coverImage" class="form-control-file mb-2">
+                            <label class="font-weight-bold mt-2">Or Featured Image URL</label>
+                            <input type="text" name="coverImage_url" value="{{ old('coverImage_url', $blog->coverImage) }}" class="form-control mb-2" placeholder="e.g. /assets/images/adonis_styling_chairs_1779270725139.png">
                             <small class="text-muted">Max file size 5MB. Automatic WebP compression applied.</small>
                             @if($blog->coverImage)
                                 <div class="mt-2">
-                                    <img src="{{ $blog->coverImage }}" class="img-thumbnail" style="max-height: 120px;">
+                                    <img src="{{ (str_starts_with($blog->coverImage, 'http') || str_starts_with($blog->coverImage, '/')) ? $blog->coverImage : asset($blog->coverImage) }}" class="img-thumbnail" style="max-height: 120px;">
                                 </div>
                             @endif
                         </div>

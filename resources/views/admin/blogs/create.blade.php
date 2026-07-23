@@ -215,8 +215,10 @@
                         <hr>
 
                         <div class="form-group">
-                            <label class="font-weight-bold">Featured Image</label>
+                            <label class="font-weight-bold">Featured Image (Upload)</label>
                             <input type="file" name="coverImage" class="form-control-file mb-2">
+                            <label class="font-weight-bold mt-2">Or Featured Image URL</label>
+                            <input type="text" name="coverImage_url" value="{{ old('coverImage_url') }}" class="form-control mb-2" placeholder="e.g. /assets/images/adonis_styling_chairs_1779270725139.png">
                             <small class="text-muted">Max file size 5MB. Automatic WebP compression applied.</small>
                         </div>
 

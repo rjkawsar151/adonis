@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LucideIcon } from './LucideIcon';
 import { navigateTo } from '../navigation';
-import { GULSHAN_PACKAGES } from '../data';
+import { GULSHAN_PACKAGES, BASHUNDHARA_PACKAGES } from '../data';
 import { PriceGroup, PriceListItem } from '../types';
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -251,7 +251,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ initialBranch = 'gul
                   <p className="text-xs text-gray-600 italic">All packages include a discount vs. individual service pricing.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {GULSHAN_PACKAGES.map((pkg, i) => (
+                  {(selectedBranch === 'bashundhara' ? BASHUNDHARA_PACKAGES : GULSHAN_PACKAGES).map((pkg, i) => (
                     <motion.div
                       key={pkg.name}
                       initial={{ opacity: 0, y: 20 }}

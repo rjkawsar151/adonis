@@ -28,11 +28,12 @@ class BarberController extends Controller
             'specialty' => 'nullable|string|max:255',
             'experienceYears' => 'nullable|integer|min:0',
             'portrait' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'portrait_url' => 'nullable|string|max:2048',
             'bio' => 'nullable|string',
             'rating' => 'nullable|numeric|min:0|max:5',
         ]);
 
-        $portraitUrl = '';
+        $portraitUrl = $request->input('portrait_url') ?? '';
         if ($request->hasFile('portrait')) {
             if (!File::isDirectory(public_path('uploads/barbers'))) {
                 File::makeDirectory(public_path('uploads/barbers'), 0755, true);
@@ -71,6 +72,7 @@ class BarberController extends Controller
             'specialty' => 'nullable|string|max:255',
             'experienceYears' => 'nullable|integer|min:0',
             'portrait' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'portrait_url' => 'nullable|string|max:2048',
             'bio' => 'nullable|string',
             'rating' => 'nullable|numeric|min:0|max:5',
         ]);
@@ -87,13 +89,15 @@ class BarberController extends Controller
             if (!File::isDirectory(public_path('uploads/barbers'))) {
                 File::makeDirectory(public_path('uploads/barbers'), 0755, true);
             }
-            if ($barber->portraitUrl && File::exists(public_path($barber->portraitUrl))) {
+            if ($barber->portraitUrl && File::exists(public_path($barber->portraitUrl)) && !str_starts_with($barber->portraitUrl, 'http')) {
                 File::delete(public_path($barber->portraitUrl));
             }
             $file = $request->file('portrait');
             $fileName = 'barber_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/barbers'), $fileName);
             $data['portraitUrl'] = 'uploads/barbers/' . $fileName;
+        } elseif ($request->has('portrait_url')) {
+            $data['portraitUrl'] = $request->input('portrait_url') ?? '';
         }
 
         $barber->update($data);
