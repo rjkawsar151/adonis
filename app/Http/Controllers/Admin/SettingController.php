@@ -52,9 +52,26 @@ class SettingController extends Controller
         $logoPath = null;
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $fileName = 'logo_' . time() . '.' . $file->getClientOriginalExtension();
+            $extension = strtolower($file->getClientOriginalExtension());
+            $fileName = 'logo_' . time() . '.' . $extension;
             $file->move(public_path('uploads/settings'), $fileName);
             $logoPath = 'uploads/settings/' . $fileName;
+
+            // If the uploaded logo is SVG, convert it to PNG for email client compatibility
+            if ($extension === 'svg') {
+                $svgFile = public_path($logoPath);
+                $pngFile = str_replace('.svg', '.png', $svgFile);
+                $cmd = sprintf(
+                    'node -e "import(\'sharp\').then(s => s.default(%s).resize(946).png().toFile(%s)).catch(err => console.error(err))"',
+                    json_encode($svgFile),
+                    json_encode($pngFile)
+                );
+                $output = shell_exec($cmd);
+                \Illuminate\Support\Facades\Log::info('SVG logo upload conversion result', [
+                    'command' => $cmd,
+                    'output' => $output
+                ]);
+            }
         }
 
         // Handle hero image upload

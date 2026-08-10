@@ -529,6 +529,20 @@ class AdonisController extends Controller
                         $formattedDate = date('l, F j, Y', strtotime($booking['date']));
                     } catch (\Throwable $e) {}
 
+                    // Retrieve the logo from database settings, converting SVG to PNG for email compatibility
+                    $settings = \Illuminate\Support\Facades\DB::table('website_settings')->first();
+                    $logoPath = $settings && !empty($settings->logo) ? $settings->logo : 'assets/images/optimized/adonis_logo_1779270678761.png';
+                    
+                    // Replace SVG extension with PNG for the email template logo since email clients don't support SVG
+                    if (pathinfo($logoPath, PATHINFO_EXTENSION) === 'svg') {
+                        $pngLogoPath = preg_replace('/\.svg$/i', '.png', $logoPath);
+                        if (file_exists(public_path($pngLogoPath))) {
+                            $logoPath = $pngLogoPath;
+                        }
+                    }
+                    
+                    $logoUrl = asset($logoPath);
+
                     // Replace placeholders
                     $replacements = [
                         '{{customer_name}}'      => $booking['clientName'] ?? '',
@@ -543,6 +557,7 @@ class AdonisController extends Controller
                         '{{support_email}}'       => 'info@adonis.com.bd',
                         '{{branch_address}}'     => $branchAddress,
                         '{{manage_booking_url}}'  => 'https://www.adonis.com.bd/',
+                        '{{logo_url}}'            => $logoUrl,
                     ];
 
                     foreach ($replacements as $placeholder => $value) {
