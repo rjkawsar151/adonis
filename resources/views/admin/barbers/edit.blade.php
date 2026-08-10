@@ -36,7 +36,7 @@
             </div>
             @if($barber->portraitUrl)
                 <div class="mt-2 w-20 h-24 border border-gray-700 overflow-hidden bg-black" id="current-portrait">
-                    <img src="{{ Str::starts_with($barber->portraitUrl, 'http') ? $barber->portraitUrl : asset($barber->portraitUrl) }}" alt="Current" class="h-full w-full object-cover">
+                    <img src="{{ str_starts_with($barber->portraitUrl, 'http') ? $barber->portraitUrl : asset($barber->portraitUrl) }}" alt="Current" class="h-full w-full object-cover">
                 </div>
             @endif
             <div id="portrait-preview" class="mt-2 hidden w-20 h-24 border border-gray-700 overflow-hidden bg-black">

@@ -8,6 +8,7 @@ use App\Models\PriceListItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class ServiceController extends Controller
 {
@@ -41,6 +42,11 @@ class ServiceController extends Controller
             'title', 'slug', 'short_description', 'price', 'branch_id', 'status', 'sort_order',
         ]));
 
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_services_all');
+        Cache::forget('adonis_services_gulshan');
+        Cache::forget('adonis_services_bashundhara');
+
         return redirect('/admin/services')->with('success', 'Service created successfully.');
     }
 
@@ -65,12 +71,23 @@ class ServiceController extends Controller
             'title', 'slug', 'short_description', 'price', 'branch_id', 'status', 'sort_order',
         ]));
 
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_services_all');
+        Cache::forget('adonis_services_gulshan');
+        Cache::forget('adonis_services_bashundhara');
+
         return redirect('/admin/services')->with('success', 'Service updated successfully.');
     }
 
     public function destroy(Service $service)
     {
         $service->delete();
+
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_services_all');
+        Cache::forget('adonis_services_gulshan');
+        Cache::forget('adonis_services_bashundhara');
+
         return redirect('/admin/services')->with('success', 'Service deleted.');
     }
 
@@ -102,6 +119,11 @@ class ServiceController extends Controller
             ]);
             $count++;
         }
+
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_services_all');
+        Cache::forget('adonis_services_gulshan');
+        Cache::forget('adonis_services_bashundhara');
 
         return redirect('/admin/services')->with('success', "Synced $count services from Price List categories.");
     }

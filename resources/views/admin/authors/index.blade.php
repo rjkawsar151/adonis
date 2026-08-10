@@ -42,7 +42,7 @@
                             <tr>
                                 <td style="width: 80px;">
                                     @if($author->profile_photo)
-                                        <img src="{{ $author->profile_photo }}" alt="{{ $author->name }}" class="img-thumbnail" style="max-height: 50px;">
+                                        <img src="{{ str_starts_with($author->profile_photo, 'http') ? $author->profile_photo : asset($author->profile_photo) }}" alt="{{ $author->name }}" class="img-thumbnail" style="max-height: 50px;">
                                     @else
                                         <span class="text-muted">None</span>
                                     @endif
@@ -119,7 +119,7 @@
                                                     <input type="file" name="profile_photo" class="form-control-file">
                                                     @if($author->profile_photo)
                                                         <div class="mt-2">
-                                                            <img src="{{ $author->profile_photo }}" style="max-height: 80px;" class="img-thumbnail">
+                                                            <img src="{{ str_starts_with($author->profile_photo, 'http') ? $author->profile_photo : asset($author->profile_photo) }}" style="max-height: 80px;" class="img-thumbnail">
                                                         </div>
                                                     @endif
                                                 </div>

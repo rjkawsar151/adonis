@@ -7,6 +7,7 @@ use App\Models\Barber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class BarberController extends Controller
 {
@@ -53,6 +54,9 @@ class BarberController extends Controller
             'bio' => $request->bio ?? '',
             'rating' => $request->rating ?? 5.0,
         ]);
+
+        Cache::forget('adonis_barbers');
+        Cache::forget('adonis_frontend_data');
 
         return redirect('/admin/barbers')->with('success', 'Barber added.');
     }
@@ -102,6 +106,9 @@ class BarberController extends Controller
 
         $barber->update($data);
 
+        Cache::forget('adonis_barbers');
+        Cache::forget('adonis_frontend_data');
+
         return redirect('/admin/barbers')->with('success', 'Barber updated.');
     }
 
@@ -112,6 +119,10 @@ class BarberController extends Controller
             File::delete(public_path($barber->portraitUrl));
         }
         $barber->delete();
+
+        Cache::forget('adonis_barbers');
+        Cache::forget('adonis_frontend_data');
+
         return redirect('/admin/barbers')->with('success', 'Barber deleted.');
     }
 }

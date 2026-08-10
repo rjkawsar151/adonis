@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PriceListItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PriceListController extends Controller
 {
@@ -56,6 +57,11 @@ class PriceListController extends Controller
 
         PriceListItem::create($data);
 
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_price_list_all');
+        Cache::forget('adonis_price_list_gulshan');
+        Cache::forget('adonis_price_list_bashundhara');
+
         return redirect('/admin/price-list')->with('success', 'Service added to price list.');
     }
 
@@ -91,6 +97,11 @@ class PriceListController extends Controller
 
         $item->update($data);
 
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_price_list_all');
+        Cache::forget('adonis_price_list_gulshan');
+        Cache::forget('adonis_price_list_bashundhara');
+
         return redirect('/admin/price-list')->with('success', 'Price list item updated.');
     }
 
@@ -98,6 +109,11 @@ class PriceListController extends Controller
     {
         $item = PriceListItem::findOrFail($id);
         $item->delete();
+
+        Cache::forget('adonis_frontend_data');
+        Cache::forget('adonis_price_list_all');
+        Cache::forget('adonis_price_list_gulshan');
+        Cache::forget('adonis_price_list_bashundhara');
 
         return redirect('/admin/price-list')->with('success', 'Price list item deleted.');
     }
@@ -122,12 +138,24 @@ class PriceListController extends Controller
 
         if ($action === 'delete') {
             $count = PriceListItem::whereIn('id', $ids)->delete();
+
+            Cache::forget('adonis_frontend_data');
+            Cache::forget('adonis_price_list_all');
+            Cache::forget('adonis_price_list_gulshan');
+            Cache::forget('adonis_price_list_bashundhara');
+
             return redirect('/admin/price-list')->with('success', "$count item(s) deleted.");
         }
 
         if ($action === 'change_branch') {
             $branch = $request->input('branch_id');
             $count = PriceListItem::whereIn('id', $ids)->update(['branch_id' => $branch]);
+
+            Cache::forget('adonis_frontend_data');
+            Cache::forget('adonis_price_list_all');
+            Cache::forget('adonis_price_list_gulshan');
+            Cache::forget('adonis_price_list_bashundhara');
+
             return redirect('/admin/price-list')->with('success', "$count item(s) moved to " . ucfirst($branch) . ".");
         }
 

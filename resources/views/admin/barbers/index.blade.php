@@ -19,7 +19,7 @@
         <div class="bg-[#111827] border border-gray-800 p-5 flex gap-5 hover:border-[#C9A84C]/30 transition-all">
             <div class="h-24 w-20 shrink-0 overflow-hidden bg-gray-900 border border-gray-700">
                 @if($barber->portraitUrl)
-                    <img src="{{ $barber->portraitUrl }}" alt="{{ $barber->name }}" class="h-full w-full object-cover grayscale">
+                    <img src="{{ str_starts_with($barber->portraitUrl, 'http') ? $barber->portraitUrl : asset($barber->portraitUrl) }}" alt="{{ $barber->name }}" class="h-full w-full object-cover grayscale">
                 @else
                     <div class="h-full w-full flex items-center justify-center text-gray-600 text-xs">No Image</div>
                 @endif

@@ -42,7 +42,7 @@
                             <tr>
                                 <td style="width: 80px;">
                                     @if($category->featured_image)
-                                        <img src="{{ $category->featured_image }}" alt="{{ $category->name }}" class="img-thumbnail" style="max-height: 50px;">
+                                        <img src="{{ str_starts_with($category->featured_image, 'http') ? $category->featured_image : asset($category->featured_image) }}" alt="{{ $category->name }}" class="img-thumbnail" style="max-height: 50px;">
                                     @else
                                         <span class="text-muted">None</span>
                                     @endif
@@ -103,7 +103,7 @@
                                                     <input type="file" name="featured_image" class="form-control-file">
                                                     @if($category->featured_image)
                                                         <div class="mt-2">
-                                                            <img src="{{ $category->featured_image }}" style="max-height: 80px;" class="img-thumbnail">
+                                                            <img src="{{ str_starts_with($category->featured_image, 'http') ? $category->featured_image : asset($category->featured_image) }}" style="max-height: 80px;" class="img-thumbnail">
                                                         </div>
                                                     @endif
                                                 </div>
