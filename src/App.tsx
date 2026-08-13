@@ -283,14 +283,6 @@ export default function App() {
   useEffect(() => {
     fetchDbData();
 
-    // Remove static loading screen with a fade-out
-    const loader = document.getElementById('app-loading-screen');
-    let loaderTimer: any = null;
-    if (loader) {
-      loader.style.opacity = '0';
-      loaderTimer = setTimeout(() => loader.remove(), 500);
-    }
-
     // Listen to custom routing events
     const handleNavigation = (e: Event) => {
       const customEvent = e as CustomEvent<string>;

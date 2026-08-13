@@ -70,22 +70,6 @@
     <!-- End Facebook Pixel Code -->
   </head>
   <body>
-    <!-- Lightweight Static Loading Screen for Instant First Paint -->
-    <div id="app-loading-screen" style="position: fixed; inset: 0; background-color: #0b0b0b; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; font-family: 'Cinzel', serif; color: #fff; transition: opacity 0.5s ease;">
-      <div style="font-size: 24px; letter-spacing: 0.25em; color: #cda250; margin-bottom: 12px; font-weight: 700; text-transform: uppercase;">ADONIS</div>
-      <div style="font-size: 9px; font-family: monospace; letter-spacing: 0.3em; color: #777; text-transform: uppercase;">Lobby Terminal Connecting...</div>
-      <div style="width: 120px; height: 2px; background: rgba(205,162,80,0.1); margin-top: 24px; position: relative; overflow: hidden; border-radius: 1px;">
-        <div style="position: absolute; top: 0; left: 0; height: 100%; width: 40px; background: #cda250; animation: adonis-pulse 1.6s infinite ease-in-out;"></div>
-      </div>
-      <style>
-        @keyframes adonis-pulse {
-          0% { transform: translateX(-40px); }
-          50% { transform: translateX(120px); }
-          100% { transform: translateX(-40px); }
-        }
-      </style>
-    </div>
-
     <div id="root"></div>
     <script type="module" src="{{ rtrim(request()->getBaseUrl(), '/') }}/build/assets/app.js?v={{ filemtime(public_path('build/assets/app.js')) }}"></script>
   </body>
