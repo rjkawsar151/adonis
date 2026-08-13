@@ -21,6 +21,7 @@ const CareerPage = React.lazy(() => import('./components/CareerPage').then(m => 
 const JobDetailPage = React.lazy(() => import('./components/JobDetailPage').then(m => ({ default: m.JobDetailPage })));
 const NotFoundPage = React.lazy(() => import('./components/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 const BookingConfirmationPage = React.lazy(() => import('./components/BookingConfirmationPage').then(m => ({ default: m.BookingConfirmationPage })));
+const OffersPage = React.lazy(() => import('./components/OffersPage').then(m => ({ default: m.OffersPage })));
 
 // Loading fallback for lazy-loaded routes
 const PageLoader = () => (
@@ -282,6 +283,7 @@ export default function App() {
       lower.startsWith('/blog/') ||
       lower === '/career' ||
       lower.startsWith('/career/') ||
+      lower === '/offers' ||
       lower === '/booking-confirmation' ||
       lower === '/privacy-policy' ||
       lower === '/book' ||
@@ -485,6 +487,7 @@ export default function App() {
                 <li><a href="/services/gulshan" onClick={(e) => { e.preventDefault(); navigateTo('/services/gulshan'); }} className="hover:text-gold-400 transition-colors">Gulshan Services</a></li>
                 <li><a href="/services/bashundhara" onClick={(e) => { e.preventDefault(); navigateTo('/services/bashundhara'); }} className="hover:text-gold-400 transition-colors">Bashundhara Services</a></li>
                 <li><a href="/about-us" onClick={(e) => { e.preventDefault(); navigateTo('/about-us'); }} className="hover:text-gold-400 transition-colors">About Us</a></li>
+                <li><a href="/offers" onClick={(e) => { e.preventDefault(); navigateTo('/offers'); }} className="hover:text-gold-400 transition-colors">Offers</a></li>
                 <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('/blog'); }} className="hover:text-gold-400 transition-colors">Blog</a></li>
                 <li><a href="/career" onClick={(e) => { e.preventDefault(); navigateTo('/career'); }} className="hover:text-gold-400 transition-colors">Careers</a></li>
                 <li><a href="/privacy-policy" className="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
@@ -544,6 +547,18 @@ export default function App() {
   // 1. SERVICES PAGE ROUTE
   const lowerPath = currentPath.toLowerCase();
   
+  if (lowerPath === '/offers') {
+    return (
+      <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
+        <Header />
+        <Suspense fallback={<PageLoader />}>
+          <OffersPage />
+        </Suspense>
+        {renderFooter()}
+      </div>
+    );
+  }
+
   if (lowerPath === '/book' || lowerPath === '/booking') {
     return (
       <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
@@ -965,7 +980,7 @@ export default function App() {
                 <p className="text-xs text-gray-400">Run our fast 30-second digital analyzer to identify and secure matching hair & beard contours.</p>
               </motion.div>
               <Suspense fallback={<div className="h-40 flex items-center justify-center text-gray-500 font-mono text-xs">Loading Profiler...</div>}>
-                <StyleProfiler onSelectRecommendedService={handleBookingBridge} />
+                <StyleProfiler onSelectRecommendedService={handleBookingBridge} barbers={barbers} />
               </Suspense>
             </motion.div>
           </div>

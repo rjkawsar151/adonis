@@ -145,8 +145,18 @@ const AnimatedCounter: React.FC<{ value: string; suffix?: string | null }> = ({ 
   return <span ref={counterRef}>{displayValue}{suffix}</span>;
 };
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export const AboutUsPage: React.FC<AboutUsPageProps> = ({ barbers, onBookBarber }) => {
   const [data, setData] = useState<AboutData | null>(null);
+  const [shuffledBarbers, setShuffledBarbers] = useState<any[]>(() => shuffleArray(barbers));
 
   useEffect(() => {
     const fetchAboutData = async () => {
@@ -609,7 +619,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ barbers, onBookBarber 
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {barbers.map(barber => (
+              {shuffledBarbers.map(barber => (
                 <div key={barber.id} className="bg-salon-gray/20 border border-white/5 hover:border-gold-400/35 transition-all duration-300 text-left overflow-hidden flex flex-col justify-between group">
                   <div>
                     {/* Barber photo */}

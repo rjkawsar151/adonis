@@ -45,6 +45,7 @@ class AdonisController extends Controller
         Cache::forget('adonis_frontend_data');
         Cache::forget('adonis_barbers');
         Cache::forget('adonis_blogs');
+        Cache::forget('adonis_offers');
         Cache::forget('adonis_price_list_all');
         Cache::forget('adonis_price_list_gulshan');
         Cache::forget('adonis_price_list_bashundhara');
@@ -614,5 +615,200 @@ class AdonisController extends Controller
             'mail.from.address'            => $smtp['fromEmail'] ?: $smtp['user'],
             'mail.from.name'               => "Adonis men's Grooming Salon",
         ]);
+    }
+
+    /* ─────────────────────────────────────────────────
+     *  OFFERS & PACKAGES
+     * ───────────────────────────────────────────────── */
+
+    public function offers()
+    {
+        if (!Schema::hasTable('offers')) {
+            return response()->json([]);
+        }
+
+        if (DB::table('offers')->count() === 0) {
+            DB::table('offers')->insert([
+                [
+                    'title' => 'REGULAR PACKAGE',
+                    'subtitle' => 'Essential Grooming Bundle',
+                    'description' => 'Includes Hair Cut, Adonis Special Facial, Pedicure & Manicure, and Shave.',
+                    'badge' => 'HOT DEAL',
+                    'icon' => 'Crown',
+                    'original_price' => 6800,
+                    'discounted_price' => 5800,
+                    'discount_percent' => 15,
+                    'valid_until' => 'Limited Time',
+                    'branch' => 'gulshan',
+                    'is_active' => 1,
+                    'sort_order' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'title' => 'CLASSIC PACKAGE',
+                    'subtitle' => 'Complete Transformation',
+                    'description' => 'Includes Hair Cut, Shave, Oil Massage, Pedicure & Manicure, and Janssen Whitening Facial.',
+                    'badge' => 'POPULAR',
+                    'icon' => 'Sparkles',
+                    'original_price' => 12300,
+                    'discounted_price' => 10500,
+                    'discount_percent' => 15,
+                    'valid_until' => 'Limited Time',
+                    'branch' => 'gulshan',
+                    'is_active' => 1,
+                    'sort_order' => 2,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'title' => 'BRIDEGROOM PACKAGE',
+                    'subtitle' => 'Single Day Wedding Grooming',
+                    'description' => 'Includes Hair Cut & Setting, Fair Polish, Hair Spa, Deluxe Pedicure & Manicure, Shave, Body Shop Vitamin C Facial, Make-Over Art, and Body Massage.',
+                    'badge' => 'VIP GROOM',
+                    'icon' => 'Award',
+                    'original_price' => 24600,
+                    'discounted_price' => 21000,
+                    'discount_percent' => 15,
+                    'valid_until' => 'Wedding Season',
+                    'branch' => 'gulshan',
+                    'is_active' => 1,
+                    'sort_order' => 3,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'title' => 'BUSINESS EXECUTIVE PACKAGE',
+                    'subtitle' => 'Premium Professional Styling',
+                    'description' => 'Includes Premium Stylish Hair Cut, Beard shaping/Shave, Bigen Ammonia Free Color Dye, Caring Hair Spa, Pedicure & Manicure, Body Shop Seaweed Facial, and Swedish Body Massage (60 Mins).',
+                    'badge' => 'EXECUTIVE',
+                    'icon' => 'Briefcase',
+                    'original_price' => 20600,
+                    'discounted_price' => 17500,
+                    'discount_percent' => 15,
+                    'valid_until' => 'Limited Time',
+                    'branch' => 'gulshan',
+                    'is_active' => 1,
+                    'sort_order' => 4,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'title' => 'ROYAL LUXURY PACKAGE',
+                    'subtitle' => 'The Ultimate Pampering',
+                    'description' => 'Includes Hair Cut, Shave, Deluxe Pedicure & Manicure, Ammonia Free Color (Inova), L’Oréal Hair Spa, Gold Facial, and Body Scrub with Steam.',
+                    'badge' => 'ROYAL',
+                    'icon' => 'Crown',
+                    'original_price' => 22800,
+                    'discounted_price' => 19500,
+                    'discount_percent' => 14,
+                    'valid_until' => 'Limited Time',
+                    'branch' => 'bashundhara',
+                    'is_active' => 1,
+                    'sort_order' => 5,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'title' => 'CLASSIC SPA PACKAGE',
+                    'subtitle' => 'Deep Relaxation Ritual',
+                    'description' => 'Includes Hair Cut, Shave, Oil Massage, Pedicure & Manicure, and Janssen Whitening Facial.',
+                    'badge' => 'SPA SPECIAL',
+                    'icon' => 'Flower',
+                    'original_price' => 12000,
+                    'discounted_price' => 10000,
+                    'discount_percent' => 17,
+                    'valid_until' => 'Limited Time',
+                    'branch' => 'bashundhara',
+                    'is_active' => 1,
+                    'sort_order' => 6,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ]);
+            Cache::forget('adonis_offers');
+        }
+
+        $offers = Cache::remember('adonis_offers', 3600, function () {
+            return DB::table('offers')
+                ->orderBy('sort_order')
+                ->orderByDesc('created_at')
+                ->get()
+                ->map(fn ($row) => [
+                    'id'               => $row->id,
+                    'title'            => $row->title,
+                    'subtitle'         => $row->subtitle,
+                    'description'      => $row->description,
+                    'badge'            => $row->badge,
+                    'icon'             => $row->icon,
+                    'original_price'   => $row->original_price ? (float) $row->original_price : null,
+                    'discounted_price' => $row->discounted_price ? (float) $row->discounted_price : null,
+                    'discount_percent' => $row->discount_percent ? (int) $row->discount_percent : null,
+                    'image'            => $row->image,
+                    'valid_until'      => $row->valid_until,
+                    'branch'           => $row->branch,
+                    'is_active'        => (bool) $row->is_active,
+                    'sort_order'       => (int) $row->sort_order,
+                ])
+                ->values()
+                ->all();
+        });
+
+        return response()->json($offers);
+    }
+
+    public function storeOffer(Request $request)
+    {
+        $id = DB::table('offers')->insertGetId([
+            'title'            => $request->input('title', 'New Offer'),
+            'subtitle'         => $request->input('subtitle'),
+            'description'      => $request->input('description'),
+            'badge'            => $request->input('badge'),
+            'icon'             => $request->input('icon', 'Tag'),
+            'original_price'   => $request->input('original_price'),
+            'discounted_price' => $request->input('discounted_price'),
+            'discount_percent' => $request->input('discount_percent'),
+            'image'            => $request->input('image'),
+            'valid_until'      => $request->input('valid_until'),
+            'branch'           => $request->input('branch', 'all'),
+            'is_active'        => $request->boolean('is_active', true) ? 1 : 0,
+            'sort_order'       => (int) $request->input('sort_order', 0),
+            'created_at'       => now(),
+            'updated_at'       => now(),
+        ]);
+        $this->clearFrontendCache();
+        return response()->json(['success' => true, 'id' => $id]);
+    }
+
+    public function updateOffer(Request $request, int $id)
+    {
+        $exists = DB::table('offers')->where('id', $id)->exists();
+        if (!$exists) return response()->json(['error' => 'Offer not found'], 404);
+
+        DB::table('offers')->where('id', $id)->update([
+            'title'            => $request->input('title'),
+            'subtitle'         => $request->input('subtitle'),
+            'description'      => $request->input('description'),
+            'badge'            => $request->input('badge'),
+            'icon'             => $request->input('icon', 'Tag'),
+            'original_price'   => $request->input('original_price'),
+            'discounted_price' => $request->input('discounted_price'),
+            'discount_percent' => $request->input('discount_percent'),
+            'image'            => $request->input('image'),
+            'valid_until'      => $request->input('valid_until'),
+            'branch'           => $request->input('branch', 'all'),
+            'is_active'        => $request->boolean('is_active', true) ? 1 : 0,
+            'sort_order'       => (int) $request->input('sort_order', 0),
+            'updated_at'       => now(),
+        ]);
+        $this->clearFrontendCache();
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteOffer(int $id)
+    {
+        DB::table('offers')->where('id', $id)->delete();
+        $this->clearFrontendCache();
+        return response()->json(['success' => true]);
     }
 }

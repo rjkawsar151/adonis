@@ -8,9 +8,19 @@ interface BarberCarouselProps {
   onBookBarber: (barberId: string) => void;
 }
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export const BarberCarousel: React.FC<BarberCarouselProps> = ({ barbers, onBookBarber }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [shuffledBarbers] = useState<Barber[]>(() => shuffleArray(barbers));
 
   // Set items per page based on viewport width
   useEffect(() => {
@@ -29,7 +39,7 @@ export const BarberCarousel: React.FC<BarberCarouselProps> = ({ barbers, onBookB
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const totalSlides = Math.max(0, barbers.length - itemsPerPage + 1);
+  const totalSlides = Math.max(0, shuffledBarbers.length - itemsPerPage + 1);
 
   useEffect(() => {
     setCurrentIndex((prev) => Math.min(prev, Math.max(0, totalSlides - 1)));
@@ -37,26 +47,26 @@ export const BarberCarousel: React.FC<BarberCarouselProps> = ({ barbers, onBookB
 
   // Auto play carousel
   useEffect(() => {
-    if (barbers.length <= itemsPerPage) return;
+    if (shuffledBarbers.length <= itemsPerPage) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [totalSlides, barbers.length, itemsPerPage]);
+  }, [totalSlides, shuffledBarbers.length, itemsPerPage]);
 
   const handleNext = () => {
-    if (barbers.length <= itemsPerPage) return;
+    if (shuffledBarbers.length <= itemsPerPage) return;
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
   };
 
   const handlePrev = () => {
-    if (barbers.length <= itemsPerPage) return;
+    if (shuffledBarbers.length <= itemsPerPage) return;
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
   };
 
-  if (barbers.length === 0) return null;
+  if (shuffledBarbers.length === 0) return null;
 
   const gap = 24; // 24px gap
 
@@ -79,7 +89,7 @@ export const BarberCarousel: React.FC<BarberCarouselProps> = ({ barbers, onBookB
             transform: `translateX(calc(-1 * ${currentIndex} * (var(--card-width) + var(--card-gap))))`,
           }}
         >
-          {barbers.map((barber) => (
+          {shuffledBarbers.map((barber) => (
             <div
               key={barber.id}
               className="flex-shrink-0 bg-salon-gray border border-white/5 hover:border-gold-400/25 transition-all duration-300 relative text-left flex flex-col justify-between overflow-hidden box-border"
@@ -136,7 +146,7 @@ export const BarberCarousel: React.FC<BarberCarouselProps> = ({ barbers, onBookB
       </div>
 
       {/* Navigation Arrows (positioned inside the container padding context to prevent layout overlaps) */}
-      {barbers.length > itemsPerPage && (
+      {shuffledBarbers.length > itemsPerPage && (
         <>
           <button
             onClick={handlePrev}

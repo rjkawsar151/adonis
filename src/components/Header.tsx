@@ -10,6 +10,7 @@ export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [hasCareers, setHasCareers] = useState(false);
+  const [hasOffers, setHasOffers] = useState(false);
   const whatsappUrl = `https://wa.me/8801919700800?text=${encodeURIComponent("Hello Adonis, I want to book a grooming appointment. Please share available slots.")}`;
 
   useEffect(() => {
@@ -23,7 +24,16 @@ export const Header: React.FC = () => {
           }
         })
         .catch(err => console.error("Error checking careers existence", err));
-    }, 2000);
+
+      fetch('/api/offers')
+        .then(res => res.json())
+        .then((data: any[]) => {
+          if (Array.isArray(data) && data.some(o => o.is_active)) {
+            setHasOffers(true);
+          }
+        })
+        .catch(() => {});
+    }, 1500);
 
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -56,6 +66,7 @@ export const Header: React.FC = () => {
   const navItems = [
     { label: 'Services', href: '/services/gulshan' },
     { label: 'About Us', href: '/about-us' },
+    { label: 'Offers', href: '/offers', hot: true },
     ...(hasCareers ? [{ label: 'Careers', href: '/career' }] : []),
     { label: 'Locations', href: '/', hash: '#branch-section' }
   ];
@@ -128,6 +139,11 @@ export const Header: React.FC = () => {
                   }`}
               >
                 {item.label}
+                {(item as any).hot && (
+                  <span className="absolute -top-2.5 -right-4 px-1.5 py-px text-[7px] font-mono font-bold uppercase tracking-wider bg-gold-400 text-black leading-tight animate-pulse">
+                    HOT
+                  </span>
+                )}
               </a>
             ))}
           </nav>

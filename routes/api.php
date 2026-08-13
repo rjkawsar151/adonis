@@ -39,3 +39,10 @@ Route::post('/appointments', [AppointmentController::class, 'store']);
 Route::get('/careers', [CareerApiController::class, 'index']);
 Route::get('/careers/{slug}', [CareerApiController::class, 'show']);
 Route::post('/careers/{id}/apply', [CareerApiController::class, 'apply']);
+
+// Offers & Packages routes
+Route::get('/offers', [AdonisController::class, 'offers']);
+Route::post('/offers', [AdonisController::class, 'storeOffer']);
+Route::put('/offers/{id}', [AdonisController::class, 'updateOffer']);
+Route::delete('/offers/{id}', [AdonisController::class, 'deleteOffer']);
+

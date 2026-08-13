@@ -28,7 +28,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [authError, setAuthError] = useState('');
 
   // Active Admin Sub-tab
-  const [activeTab, setActiveTab] = useState<'services' | 'barbers' | 'blogs' | 'settings' | 'smtp'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'barbers' | 'blogs' | 'offers' | 'settings' | 'smtp'>('services');
 
   // Form States for CRUD
   const [editingService, setEditingService] = useState<Partial<Service> | null>(null);
@@ -41,6 +41,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [editingBlog, setEditingBlog] = useState<Partial<BlogPost> | null>(null);
   const [isAddingBlog, setIsAddingBlog] = useState(false);
   const [blogImageUrl, setBlogImageUrl] = useState('');
+
+  // Offers state
+  const [offersList, setOffersList] = useState<any[]>([]);
+  const [offersLoading, setOffersLoading] = useState(false);
+  const [editingOffer, setEditingOffer] = useState<any | null>(null);
+  const [isAddingOffer, setIsAddingOffer] = useState(false);
 
   // Form States for Settings
   const [siteForm, setSiteForm] = useState<SiteSettings>({ ...settings });
@@ -56,6 +62,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   useEffect(() => {
     setSmtpForm({ ...smtp });
   }, [smtp]);
+
+  const fetchOffers = () => {
+    setOffersLoading(true);
+    fetch('/api/offers')
+      .then(r => r.json())
+      .then(data => setOffersList(Array.isArray(data) ? data : []))
+      .catch(() => setOffersList([]))
+      .finally(() => setOffersLoading(false));
+  };
+
+  useEffect(() => {
+    if (activeTab === 'offers') fetchOffers();
+  }, [activeTab]);
 
   // Auth Submit
   const handleAuthSubmit = (e: React.FormEvent) => {
@@ -442,6 +461,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             { id: 'services', label: 'Services Manager', icon: 'Scissors' },
             { id: 'barbers', label: 'Barbers Manager', icon: 'Users' },
             { id: 'blogs', label: 'Blog Writer', icon: 'FileText' },
+            { id: 'offers', label: 'Offers Manager', icon: 'Tag' },
             { id: 'settings', label: 'Site Settings', icon: 'Settings' },
             { id: 'smtp', label: 'SMTP Configuration', icon: 'Mail' }
           ].map(tab => (
@@ -1265,6 +1285,92 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               )}
             </form>
+          )}
+
+          {activeTab === 'offers' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="text-left space-y-1">
+                  <h3 className="font-serif text-lg uppercase tracking-wider text-white">Offers &amp; Packages Manager</h3>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Create and manage promotional deals shown on the public Offers page</p>
+                </div>
+                {!editingOffer && !isAddingOffer && (
+                  <button
+                    onClick={() => { setIsAddingOffer(true); setEditingOffer({ title: '', subtitle: '', description: '', badge: '', icon: 'Tag', original_price: '', discounted_price: '', discount_percent: '', valid_until: '', branch: 'all', is_active: true, sort_order: 0 }); }}
+                    className="px-5 py-2.5 bg-gold-400 hover:bg-gold-500 text-salon-black font-serif text-[10px] font-bold uppercase tracking-widest transition-colors cursor-pointer"
+                  >
+                    Add Offer
+                  </button>
+                )}
+              </div>
+              {(isAddingOffer || editingOffer) && editingOffer && (
+                <div className="p-6 border border-gold-400/20 bg-salon-black space-y-6 max-w-3xl text-left">
+                  <h4 className="font-serif text-sm uppercase tracking-wider text-gold-400 pb-2 border-b border-white/5">
+                    {isAddingOffer ? 'Add New Offer' : 'Edit Offer'}
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Title *</label><input type="text" value={editingOffer.title || ''} onChange={e => setEditingOffer({ ...editingOffer, title: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="e.g. Premium Grooming Bundle" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Subtitle</label><input type="text" value={editingOffer.subtitle || ''} onChange={e => setEditingOffer({ ...editingOffer, subtitle: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="Short tagline" /></div>
+                    <div className="md:col-span-2"><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Description</label><textarea rows={3} value={editingOffer.description || ''} onChange={e => setEditingOffer({ ...editingOffer, description: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors resize-none" placeholder="What's included, benefits, etc." /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Badge</label><input type="text" value={editingOffer.badge || ''} onChange={e => setEditingOffer({ ...editingOffer, badge: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="HOT DEAL" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Icon (Lucide name)</label><input type="text" value={editingOffer.icon || ''} onChange={e => setEditingOffer({ ...editingOffer, icon: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="Tag, Crown, Sparkles…" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Original Price (৳)</label><input type="number" value={editingOffer.original_price || ''} onChange={e => setEditingOffer({ ...editingOffer, original_price: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="5000" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Discounted Price (৳)</label><input type="number" value={editingOffer.discounted_price || ''} onChange={e => setEditingOffer({ ...editingOffer, discounted_price: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="3500" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Discount %</label><input type="number" value={editingOffer.discount_percent || ''} onChange={e => setEditingOffer({ ...editingOffer, discount_percent: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="30" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Valid Until</label><input type="text" value={editingOffer.valid_until || ''} onChange={e => setEditingOffer({ ...editingOffer, valid_until: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" placeholder="Aug 31, 2026" /></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Branch</label><select value={editingOffer.branch || 'all'} onChange={e => setEditingOffer({ ...editingOffer, branch: e.target.value })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors"><option value="all">All Branches</option><option value="gulshan">Gulshan</option><option value="bashundhara">Bashundhara</option></select></div>
+                    <div><label className="block text-[9px] font-mono uppercase tracking-widest text-gray-500 mb-1">Sort Order</label><input type="number" value={editingOffer.sort_order ?? 0} onChange={e => setEditingOffer({ ...editingOffer, sort_order: parseInt(e.target.value) || 0 })} className="w-full bg-salon-gray text-white text-xs border border-white/10 px-3 py-2.5 focus:outline-none focus:border-gold-400 transition-colors" /></div>
+                    <div className="flex items-center gap-3"><label className="text-[9px] font-mono uppercase tracking-widest text-gray-500">Active</label><input type="checkbox" checked={!!editingOffer.is_active} onChange={e => setEditingOffer({ ...editingOffer, is_active: e.target.checked })} className="w-4 h-4 accent-gold-400" /></div>
+                  </div>
+                  <div className="flex gap-4">
+                    <button onClick={async () => {
+                      const isEdit = !!editingOffer.id;
+                      const url = isEdit ? `/api/offers/${editingOffer.id}` : '/api/offers';
+                      const method = isEdit ? 'PUT' : 'POST';
+                      try {
+                        const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editingOffer) });
+                        const data = await res.json();
+                        if (data.success) { setEditingOffer(null); setIsAddingOffer(false); fetchOffers(); }
+                      } catch { alert('Failed to save offer.'); }
+                    }} className="px-6 py-2.5 bg-gold-400 hover:bg-gold-500 text-salon-black font-serif text-[10px] font-bold uppercase tracking-widest transition-colors cursor-pointer">Save Offer</button>
+                    <button onClick={() => { setEditingOffer(null); setIsAddingOffer(false); }} className="px-6 py-2.5 border border-white/10 text-white hover:border-gold-400/50 text-[10px] font-serif uppercase tracking-widest transition-colors cursor-pointer">Cancel</button>
+                  </div>
+                </div>
+              )}
+              {!editingOffer && !isAddingOffer && (
+                <div className="space-y-3">
+                  {offersLoading && <p className="text-xs font-mono text-gray-500 uppercase tracking-widest py-4">Loading...</p>}
+                  {!offersLoading && offersList.length === 0 && <p className="text-xs font-mono text-gray-600 uppercase tracking-widest text-center py-8">No offers yet. Click "Add Offer" to create one.</p>}
+                  {offersList.map(offer => (
+                    <div key={offer.id} className="flex items-start justify-between gap-4 p-4 bg-salon-black border border-white/5 hover:border-gold-400/20 transition-all">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          {offer.badge && <span className="px-1.5 py-0.5 text-[7px] font-mono uppercase tracking-wider bg-gold-400 text-black font-bold">{offer.badge}</span>}
+                          <span className={`text-[8px] font-mono px-1.5 py-0.5 border ${offer.is_active ? 'border-green-500/30 text-green-400' : 'border-red-500/30 text-red-400'}`}>{offer.is_active ? 'Active' : 'Inactive'}</span>
+                          <span className="text-[8px] font-mono text-gray-600 uppercase">{offer.branch}</span>
+                        </div>
+                        <h5 className="font-serif text-sm text-white uppercase truncate">{offer.title}</h5>
+                        {offer.subtitle && <p className="text-[10px] text-gray-400 font-mono mt-0.5 truncate">{offer.subtitle}</p>}
+                        <div className="flex items-center gap-3 mt-1">
+                          {offer.discounted_price && <span className="text-xs text-gold-400 font-serif font-bold">৳{offer.discounted_price}</span>}
+                          {offer.original_price && <span className="text-[10px] text-gray-500 line-through">৳{offer.original_price}</span>}
+                          {offer.discount_percent && <span className="text-[9px] text-red-400 font-mono">-{offer.discount_percent}%</span>}
+                        </div>
+                      </div>
+                      <div className="flex gap-3 text-[10px] font-mono shrink-0 pt-1">
+                        <button onClick={() => { setIsAddingOffer(false); setEditingOffer({ ...offer }); }} className="text-gold-400 hover:underline cursor-pointer">Edit</button>
+                        <button onClick={async () => {
+                          if (!confirm('Delete this offer?')) return;
+                          const res = await fetch(`/api/offers/${offer.id}`, { method: 'DELETE' });
+                          const data = await res.json();
+                          if (data.success) fetchOffers();
+                        }} className="text-red-400 hover:underline cursor-pointer">Delete</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
         </div>

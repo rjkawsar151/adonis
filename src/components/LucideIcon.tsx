@@ -47,6 +47,14 @@ import {
   Palette,
   Layers,
   AlertTriangle,
+  ScanFace,
+  Brain,
+  Scan,
+  Cpu,
+  Award,
+  CalendarCheck,
+  RefreshCcw,
+  Tag,
   type LucideIcon as LucideIconType,
 } from 'lucide-react';
 
@@ -99,6 +107,14 @@ const ICON_MAP: Record<string, LucideIconType> = {
   Palette,
   Layers,
   AlertTriangle,
+  ScanFace,
+  Brain,
+  Scan,
+  Cpu,
+  Award,
+  CalendarCheck,
+  RefreshCcw,
+  Tag,
 };
 
 interface LucideIconProps {
