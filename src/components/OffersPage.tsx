@@ -20,6 +20,10 @@ interface Offer {
   sort_order: number;
 }
 
+interface OffersPageProps {
+  onClaimOffer?: (offer: Offer) => void;
+}
+
 const BRANCH_LABELS: Record<string, string> = {
   all: 'All Branches',
   gulshan: 'Gulshan',
@@ -28,7 +32,7 @@ const BRANCH_LABELS: Record<string, string> = {
 
 const BRANCH_FILTERS = ['all', 'gulshan', 'bashundhara'];
 
-export const OffersPage: React.FC = () => {
+export const OffersPage: React.FC<OffersPageProps> = ({ onClaimOffer }) => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
@@ -240,7 +244,13 @@ export const OffersPage: React.FC = () => {
                     {/* Spacer + CTA */}
                     <div className="flex-1" />
                     <button
-                      onClick={() => navigateTo('/book')}
+                      onClick={() => {
+                        if (onClaimOffer) {
+                          onClaimOffer(offer);
+                        } else {
+                          navigateTo('/book');
+                        }
+                      }}
                       className="w-full py-3 mt-2 bg-[#32BBED] hover:bg-gold-400 text-black font-serif text-[10px] font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer flex items-center justify-center gap-2"
                     >
                       <LucideIcon name="Calendar" size={12} />

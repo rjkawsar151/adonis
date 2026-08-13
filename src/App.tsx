@@ -552,7 +552,13 @@ export default function App() {
       <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
         <Header />
         <Suspense fallback={<PageLoader />}>
-          <OffersPage />
+          <OffersPage onClaimOffer={(offer) => {
+            const branch = offer.branch === 'all' ? 'gulshan' : (offer.branch as 'gulshan' | 'bashundhara');
+            const displayTitle = offer.discounted_price
+              ? `${offer.title} (Special Offer: ৳${offer.discounted_price.toLocaleString()})`
+              : offer.title;
+            handleBookingBridge(displayTitle, branch);
+          }} />
         </Suspense>
         {renderFooter()}
       </div>
