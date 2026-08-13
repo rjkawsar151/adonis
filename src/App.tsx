@@ -29,6 +29,37 @@ const PageLoader = () => (
     <div className="mx-auto h-px w-16 bg-gold-400/20"></div>
   </div>
 );
+
+// Error Boundary to prevent blank/black screen on uncaught render errors
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('App ErrorBoundary caught:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-salon-black text-white flex flex-col items-center justify-center p-8 text-center space-y-4">
+          <h2 className="font-serif text-2xl uppercase tracking-wider text-gold-400">Adonis Lounge</h2>
+          <p className="text-xs text-gray-400 max-w-md">An unexpected interface error occurred. Please refresh the page to reload.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2.5 bg-gold-400 text-black font-serif text-xs font-bold uppercase tracking-widest cursor-pointer"
+          >
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import {
   SERVICES as DEFAULT_SERVICES,
   BRANCHES,
@@ -214,14 +245,18 @@ export default function App() {
 
       // Laravel API endpoints (primary data sources)
       if (svcRes.status === 'fulfilled' && svcRes.value.ok) {
-        const svc = await svcRes.value.json();
-        if (svc && svc.length > 0) setServices(svc);
+        try {
+          const svc = await svcRes.value.json();
+          if (Array.isArray(svc) && svc.length > 0) setServices(svc);
+        } catch {}
       }
       if (barRes.status === 'fulfilled' && barRes.value.ok) {
-        const bar = await barRes.value.json();
-        if (bar && bar.length > 0) {
-          setBarbers(bar.map((b: Barber) => ({ ...b, portraitUrl: assetUrl(b.portraitUrl) })));
-        }
+        try {
+          const bar = await barRes.value.json();
+          if (Array.isArray(bar) && bar.length > 0) {
+            setBarbers(bar.map((b: Barber) => ({ ...b, portraitUrl: assetUrl(b.portraitUrl) })));
+          }
+        } catch {}
       }
     } catch (err) {
       // All APIs failed — using fallback defaults

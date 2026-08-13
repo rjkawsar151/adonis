@@ -40,8 +40,12 @@ export const OffersPage: React.FC<OffersPageProps> = ({ onClaimOffer }) => {
   useEffect(() => {
     fetch('/api/offers')
       .then(r => r.json())
-      .then((data: Offer[]) => {
-        setOffers(data.filter(o => o.is_active));
+      .then((data: any) => {
+        if (Array.isArray(data)) {
+          setOffers(data.filter(o => o && o.is_active));
+        } else {
+          setOffers([]);
+        }
       })
       .catch(() => setOffers([]))
       .finally(() => setLoading(false));
