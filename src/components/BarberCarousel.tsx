@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Barber } from '../types';
 import { LucideIcon } from './LucideIcon';
 import { OptimizedImage } from './OptimizedImage';
@@ -20,7 +20,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 export const BarberCarousel: React.FC<BarberCarouselProps> = ({ barbers, onBookBarber }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(3);
-  const [shuffledBarbers] = useState<Barber[]>(() => shuffleArray(barbers));
+  const shuffledBarbers = useMemo(() => shuffleArray(barbers || []), [barbers]);
 
   // Set items per page based on viewport width
   useEffect(() => {

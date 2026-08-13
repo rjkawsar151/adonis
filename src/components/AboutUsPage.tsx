@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { LucideIcon } from './LucideIcon';
 import { navigateTo } from '../navigation';
 import { OptimizedImage } from './OptimizedImage';
@@ -156,7 +156,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 export const AboutUsPage: React.FC<AboutUsPageProps> = ({ barbers, onBookBarber }) => {
   const [data, setData] = useState<AboutData | null>(null);
-  const [shuffledBarbers, setShuffledBarbers] = useState<any[]>(() => shuffleArray(barbers));
+  const shuffledBarbers = useMemo(() => shuffleArray(barbers || []), [barbers]);
 
   useEffect(() => {
     const fetchAboutData = async () => {

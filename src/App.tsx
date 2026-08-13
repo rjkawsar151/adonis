@@ -668,7 +668,7 @@ export default function App() {
   }
 
   // 2. ABOUT US PAGE ROUTE
-  if (currentPath === '/about-us') {
+  if (lowerPath === '/about-us' || lowerPath === '/about-us/') {
     return (
       <div className="bg-salon-black text-white selection:bg-gold-400 selection:text-salon-black min-h-screen relative font-sans leading-relaxed flex flex-col">
         <Header />
