@@ -947,11 +947,11 @@ export default function App() {
                       <span className="text-[9px] text-gray-500 uppercase font-mono block">Starting from</span>
                       <div className="flex items-baseline gap-1.5">
                         <span className="text-sm font-serif text-gold-400 font-bold">
-                          {service.priceBDT.startsWith('৳') ? service.priceBDT : `৳${service.priceBDT}`}
+                          {String(service.priceBDT || '').startsWith('৳') ? service.priceBDT : `৳${service.priceBDT}`}
                         </span>
                         {service.originalPrice && (
                           <span className="text-[10px] text-gray-500 line-through font-mono">
-                            {service.originalPrice.startsWith('৳') ? service.originalPrice : `৳${service.originalPrice}`}
+                            {String(service.originalPrice || '').startsWith('৳') ? service.originalPrice : `৳${service.originalPrice}`}
                           </span>
                         )}
                       </div>
