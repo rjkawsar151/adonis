@@ -30,6 +30,23 @@ Route::get('/sitemap.xml', [FrontendController::class, 'sitemapXml']);
 Route::get('/api/price-list/{branch?}', [FrontendController::class, 'priceList']);
 Route::get('/api/about', [FrontendController::class, 'about']);
 
+// Migration runner route (for cPanel environments without SSH/terminal)
+Route::get('/run-migrate', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Migration completed successfully!',
+            'output'  => \Illuminate\Support\Facades\Artisan::output()
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'success' => false,
+            'error'   => $e->getMessage()
+        ], 500);
+    }
+});
+
 // ─── Admin Authentication ───
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('admin.login');

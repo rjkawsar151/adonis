@@ -624,7 +624,13 @@ class AdonisController extends Controller
     public function offers()
     {
         if (!Schema::hasTable('offers')) {
-            return response()->json([]);
+            try {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            } catch (\Throwable $e) {
+                if (!Schema::hasTable('offers')) {
+                    return response()->json([]);
+                }
+            }
         }
 
         if (DB::table('offers')->count() === 0) {
