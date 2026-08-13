@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\WebsiteSetting;
 use App\Models\FooterSetting;
+use App\Services\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -52,13 +53,11 @@ class SettingController extends Controller
         $logoPath = null;
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $extension = strtolower($file->getClientOriginalExtension());
-            $fileName = 'logo_' . time() . '.' . $extension;
-            $file->move(public_path('uploads/settings'), $fileName);
-            $logoPath = 'uploads/settings/' . $fileName;
+            $isSvg = strtolower($file->getClientOriginalExtension()) === 'svg';
+            $logoPath = ImageCompressor::compressAndSaveWebp($file, 'uploads/settings', 70);
 
             // If the uploaded logo is SVG, convert it to PNG for email client compatibility
-            if ($extension === 'svg') {
+            if ($isSvg) {
                 $svgFile = public_path($logoPath);
                 $pngFile = str_replace('.svg', '.png', $svgFile);
                 $cmd = sprintf(
@@ -77,10 +76,7 @@ class SettingController extends Controller
         // Handle hero image upload
         $heroImagePath = null;
         if ($request->hasFile('hero_image')) {
-            $file = $request->file('hero_image');
-            $fileName = 'hero_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/settings'), $fileName);
-            $heroImagePath = 'uploads/settings/' . $fileName;
+            $heroImagePath = ImageCompressor::compressAndSaveWebp($request->file('hero_image'), 'uploads/settings', 70);
         }
 
         // Update or create website settings

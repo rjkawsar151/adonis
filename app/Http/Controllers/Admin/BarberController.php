@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Barber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Cache;
+use App\Services\ImageCompressor;
 
 class BarberController extends Controller
 {
@@ -36,13 +37,7 @@ class BarberController extends Controller
 
         $portraitUrl = $request->input('portrait_url') ?? '';
         if ($request->hasFile('portrait')) {
-            if (!File::isDirectory(public_path('uploads/barbers'))) {
-                File::makeDirectory(public_path('uploads/barbers'), 0755, true);
-            }
-            $file = $request->file('portrait');
-            $fileName = 'barber_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/barbers'), $fileName);
-            $portraitUrl = 'uploads/barbers/' . $fileName;
+            $portraitUrl = ImageCompressor::compressAndSaveWebp($request->file('portrait'), 'uploads/barbers', 70);
         }
 
         Barber::create([
@@ -90,16 +85,10 @@ class BarberController extends Controller
         ];
 
         if ($request->hasFile('portrait')) {
-            if (!File::isDirectory(public_path('uploads/barbers'))) {
-                File::makeDirectory(public_path('uploads/barbers'), 0755, true);
-            }
             if ($barber->portraitUrl && File::exists(public_path($barber->portraitUrl)) && !str_starts_with($barber->portraitUrl, 'http')) {
                 File::delete(public_path($barber->portraitUrl));
             }
-            $file = $request->file('portrait');
-            $fileName = 'barber_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/barbers'), $fileName);
-            $data['portraitUrl'] = 'uploads/barbers/' . $fileName;
+            $data['portraitUrl'] = ImageCompressor::compressAndSaveWebp($request->file('portrait'), 'uploads/barbers', 70);
         } elseif ($request->has('portrait_url')) {
             $data['portraitUrl'] = $request->input('portrait_url') ?? '';
         }

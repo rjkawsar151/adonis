@@ -16,6 +16,7 @@ use App\Models\AboutCta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use App\Services\ImageCompressor;
 
 class AboutPageController extends Controller
 {
@@ -585,13 +586,7 @@ class AboutPageController extends Controller
     // ─── Image Helpers ───
     private function uploadImage($file, $folder)
     {
-        $destinationPath = public_path('uploads/' . $folder);
-        if (!File::isDirectory($destinationPath)) {
-            File::makeDirectory($destinationPath, 0755, true);
-        }
-        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move($destinationPath, $fileName);
-        return 'uploads/' . $folder . '/' . $fileName;
+        return ImageCompressor::compressAndSaveWebp($file, 'uploads/' . $folder, 70);
     }
 
     private function removeOldImage($path)

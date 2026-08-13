@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Services\ImageCompressor;
 
 class CareerController extends Controller
 {
@@ -75,13 +76,7 @@ class CareerController extends Controller
 
         $featuredImageUrl = null;
         if ($request->hasFile('featured_image')) {
-            if (!File::isDirectory(public_path('uploads/careers'))) {
-                File::makeDirectory(public_path('uploads/careers'), 0755, true);
-            }
-            $file = $request->file('featured_image');
-            $fileName = 'job_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/careers'), $fileName);
-            $featuredImageUrl = 'uploads/careers/' . $fileName;
+            $featuredImageUrl = ImageCompressor::compressAndSaveWebp($request->file('featured_image'), 'uploads/careers', 70);
         }
 
         $career = Career::create([
@@ -245,16 +240,10 @@ class CareerController extends Controller
         ];
 
         if ($request->hasFile('featured_image')) {
-            if (!File::isDirectory(public_path('uploads/careers'))) {
-                File::makeDirectory(public_path('uploads/careers'), 0755, true);
-            }
             if ($career->featured_image && File::exists(public_path($career->featured_image))) {
                 File::delete(public_path($career->featured_image));
             }
-            $file = $request->file('featured_image');
-            $fileName = 'job_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/careers'), $fileName);
-            $data['featured_image'] = 'uploads/careers/' . $fileName;
+            $data['featured_image'] = ImageCompressor::compressAndSaveWebp($request->file('featured_image'), 'uploads/careers', 70);
         }
 
         $career->update($data);

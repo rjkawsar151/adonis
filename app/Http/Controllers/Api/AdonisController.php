@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Cache;
+use App\Services\ImageCompressor;
 
 class AdonisController extends Controller
 {
@@ -241,10 +242,11 @@ class AdonisController extends Controller
 
     public function upload(Request $request)
     {
-        if (!$request->hasFile('portrait')) {
+        $file = $request->file('portrait') ?? $request->file('image') ?? $request->file('photo') ?? $request->file('file');
+        if (!$file) {
             return response()->json(['success' => false, 'error' => 'No file uploaded'], 400);
         }
-        $path = $request->file('portrait')->store('uploads', 'public_uploads');
+        $path = ImageCompressor::compressAndSaveWebp($file, 'uploads/barbers', 70);
         return response()->json(['success' => true, 'url' => url('/' . str_replace('\\', '/', $path))]);
     }
 

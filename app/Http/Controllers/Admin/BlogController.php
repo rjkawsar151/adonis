@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use App\Services\ImageCompressor;
 
 class BlogController extends Controller
 {
@@ -333,31 +334,7 @@ class BlogController extends Controller
 
     protected function uploadAndOptimizeImage($file): string
     {
-        if (!File::isDirectory(public_path('uploads/blogs'))) {
-            File::makeDirectory(public_path('uploads/blogs'), 0755, true);
-        }
-
-        $fileName = 'blog_' . time() . '_' . uniqid();
-        $ext = $file->getClientOriginalExtension();
-        
-        $tempPath = $file->getRealPath();
-        $targetPath = public_path('uploads/blogs/' . $fileName . '.webp');
-
-        // Automatic WebP Conversion using GD
-        if (function_exists('imagecreatefromstring')) {
-            $imgString = file_get_contents($tempPath);
-            $im = imagecreatefromstring($imgString);
-            if ($im !== false) {
-                imagepalettetotruecolor($im);
-                imagewebp($im, $targetPath, 85); // 85% compression quality
-                imagedestroy($im);
-                return 'uploads/blogs/' . $fileName . '.webp';
-            }
-        }
-
-        // Fallback to normal upload if GD fails
-        $file->move(public_path('uploads/blogs'), $fileName . '.' . $ext);
-        return 'uploads/blogs/' . $fileName . '.' . $ext;
+        return ImageCompressor::compressAndSaveWebp($file, 'uploads/blogs', 70);
     }
 
     protected function clearBlogCache($id = null)

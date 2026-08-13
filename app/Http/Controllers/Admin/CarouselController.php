@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CarouselImage;
+use App\Services\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -29,11 +30,10 @@ class CarouselController extends Controller
         $maxOrder = CarouselImage::max('sort_order') ?? 0;
 
         foreach ($request->file('images') as $i => $file) {
-            $fileName = 'carousel_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/carousel'), $fileName);
+            $imagePath = ImageCompressor::compressAndSaveWebp($file, 'uploads/carousel', 70);
 
             CarouselImage::create([
-                'image_path' => 'uploads/carousel/' . $fileName,
+                'image_path' => $imagePath,
                 'alt_text' => null,
                 'link_url' => null,
                 'sort_order' => $maxOrder + $i + 1,

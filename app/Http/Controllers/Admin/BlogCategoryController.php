@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
+use App\Services\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -33,10 +34,7 @@ class BlogCategoryController extends Controller
         $data['status'] = $request->has('status');
 
         if ($request->hasFile('featured_image')) {
-            $file = $request->file('featured_image');
-            $fileName = 'cat_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/blogs'), $fileName);
-            $data['featured_image'] = '/uploads/blogs/' . $fileName;
+            $data['featured_image'] = '/' . ImageCompressor::compressAndSaveWebp($request->file('featured_image'), 'uploads/blogs', 70);
         }
 
         BlogCategory::create($data);
@@ -66,10 +64,7 @@ class BlogCategoryController extends Controller
             if ($category->featured_image && File::exists(public_path($category->featured_image))) {
                 File::delete(public_path($category->featured_image));
             }
-            $file = $request->file('featured_image');
-            $fileName = 'cat_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/blogs'), $fileName);
-            $data['featured_image'] = '/uploads/blogs/' . $fileName;
+            $data['featured_image'] = '/' . ImageCompressor::compressAndSaveWebp($request->file('featured_image'), 'uploads/blogs', 70);
         }
 
         $category->update($data);

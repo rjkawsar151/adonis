@@ -87,6 +87,16 @@ Route::prefix('admin')->middleware(['web', 'admin'])->group(function () {
         Route::delete('/carousel/{id}', [CarouselController::class, 'destroy'])->name('admin.carousel.destroy');
     });
 
+    // Offers & Packages
+    Route::middleware('role:offers')->group(function () {
+        Route::get('/offers', [\App\Http\Controllers\Admin\OfferController::class, 'index'])->name('admin.offers.index');
+        Route::get('/offers/create', [\App\Http\Controllers\Admin\OfferController::class, 'create'])->name('admin.offers.create');
+        Route::post('/offers', [\App\Http\Controllers\Admin\OfferController::class, 'store'])->name('admin.offers.store');
+        Route::get('/offers/{id}/edit', [\App\Http\Controllers\Admin\OfferController::class, 'edit'])->name('admin.offers.edit');
+        Route::put('/offers/{id}', [\App\Http\Controllers\Admin\OfferController::class, 'update'])->name('admin.offers.update');
+        Route::delete('/offers/{id}', [\App\Http\Controllers\Admin\OfferController::class, 'destroy'])->name('admin.offers.destroy');
+    });
+
     // Price List
     Route::middleware('role:price-list')->group(function () {
         Route::get('/price-list', [PriceListController::class, 'index'])->name('admin.price-list.index');

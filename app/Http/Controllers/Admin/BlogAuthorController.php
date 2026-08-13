@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogAuthor;
+use App\Services\ImageCompressor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
@@ -35,10 +36,7 @@ class BlogAuthorController extends Controller
         $data['status'] = $request->has('status');
 
         if ($request->hasFile('profile_photo')) {
-            $file = $request->file('profile_photo');
-            $fileName = 'auth_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/blogs'), $fileName);
-            $data['profile_photo'] = '/uploads/blogs/' . $fileName;
+            $data['profile_photo'] = '/' . ImageCompressor::compressAndSaveWebp($request->file('profile_photo'), 'uploads/blogs', 70);
         }
 
         BlogAuthor::create($data);
@@ -71,10 +69,7 @@ class BlogAuthorController extends Controller
             if ($author->profile_photo && File::exists(public_path($author->profile_photo))) {
                 File::delete(public_path($author->profile_photo));
             }
-            $file = $request->file('profile_photo');
-            $fileName = 'auth_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/blogs'), $fileName);
-            $data['profile_photo'] = '/uploads/blogs/' . $fileName;
+            $data['profile_photo'] = '/' . ImageCompressor::compressAndSaveWebp($request->file('profile_photo'), 'uploads/blogs', 70);
         }
 
         $author->update($data);
