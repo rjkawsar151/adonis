@@ -7,21 +7,36 @@ import { navigateTo } from './navigation';
 import { assetUrl } from './assetUrl';
 import { LazySection } from './components/LazySection';
 
+// Helper for resilient lazy imports on production servers
+const lazyWithRetry = (factory: () => Promise<any>) =>
+  React.lazy(async () => {
+    try {
+      return await factory();
+    } catch (error) {
+      const isReloaded = sessionStorage.getItem('adonis_chunk_retry');
+      if (!isReloaded) {
+        sessionStorage.setItem('adonis_chunk_retry', 'true');
+        window.location.reload();
+      }
+      throw error;
+    }
+  });
+
 // Lazy-loaded components for code splitting
-const BookingForm = React.lazy(() => import('./components/BookingForm').then(m => ({ default: m.BookingForm })));
-const StyleProfiler = React.lazy(() => import('./components/StyleProfiler').then(m => ({ default: m.StyleProfiler })));
-const BarberCarousel = React.lazy(() => import('./components/BarberCarousel').then(m => ({ default: m.BarberCarousel })));
-const ReviewCarousel = React.lazy(() => import('./components/ReviewCarousel').then(m => ({ default: m.ReviewCarousel })));
+const BookingForm = lazyWithRetry(() => import('./components/BookingForm').then(m => ({ default: m.BookingForm })));
+const StyleProfiler = lazyWithRetry(() => import('./components/StyleProfiler').then(m => ({ default: m.StyleProfiler })));
+const BarberCarousel = lazyWithRetry(() => import('./components/BarberCarousel').then(m => ({ default: m.BarberCarousel })));
+const ReviewCarousel = lazyWithRetry(() => import('./components/ReviewCarousel').then(m => ({ default: m.ReviewCarousel })));
 
 // Lazy-loaded route components for code splitting
-const ServicesPage = React.lazy(() => import('./components/ServicesPage').then(m => ({ default: m.ServicesPage })));
-const AboutUsPage = React.lazy(() => import('./components/AboutUsPage').then(m => ({ default: m.AboutUsPage })));
-const BlogPage = React.lazy(() => import('./components/BlogPage').then(m => ({ default: m.BlogPage })));
-const CareerPage = React.lazy(() => import('./components/CareerPage').then(m => ({ default: m.CareerPage })));
-const JobDetailPage = React.lazy(() => import('./components/JobDetailPage').then(m => ({ default: m.JobDetailPage })));
-const NotFoundPage = React.lazy(() => import('./components/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
-const BookingConfirmationPage = React.lazy(() => import('./components/BookingConfirmationPage').then(m => ({ default: m.BookingConfirmationPage })));
-const OffersPage = React.lazy(() => import('./components/OffersPage').then(m => ({ default: m.OffersPage })));
+const ServicesPage = lazyWithRetry(() => import('./components/ServicesPage').then(m => ({ default: m.ServicesPage })));
+const AboutUsPage = lazyWithRetry(() => import('./components/AboutUsPage').then(m => ({ default: m.AboutUsPage })));
+const BlogPage = lazyWithRetry(() => import('./components/BlogPage').then(m => ({ default: m.BlogPage })));
+const CareerPage = lazyWithRetry(() => import('./components/CareerPage').then(m => ({ default: m.CareerPage })));
+const JobDetailPage = lazyWithRetry(() => import('./components/JobDetailPage').then(m => ({ default: m.JobDetailPage })));
+const NotFoundPage = lazyWithRetry(() => import('./components/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
+const BookingConfirmationPage = lazyWithRetry(() => import('./components/BookingConfirmationPage').then(m => ({ default: m.BookingConfirmationPage })));
+const OffersPage = lazyWithRetry(() => import('./components/OffersPage').then(m => ({ default: m.OffersPage })));
 
 // Loading fallback for lazy-loaded routes
 const PageLoader = () => (

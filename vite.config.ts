@@ -24,7 +24,7 @@ export default defineConfig(({ command }) => {
             if (chunkInfo.name === 'vendor') {
               return 'assets/vendor.js';
             }
-            return 'assets/[name]-[hash].js';
+            return 'assets/[name].js';
           },
           assetFileNames: (assetInfo) => {
             if (assetInfo.name && assetInfo.name.endsWith('.css')) {
