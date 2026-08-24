@@ -32,6 +32,16 @@ const BRANCH_LABELS: Record<string, string> = {
 
 const BRANCH_FILTERS = ['all', 'gulshan', 'bashundhara'];
 
+const parseServices = (desc: string | null): string[] => {
+  if (!desc) return [];
+  const match = desc.match(/includes\s+(.+)/i);
+  if (!match) return [];
+  const servicesText = match[1];
+  const cleanText = servicesText.replace(/\.$/, '');
+  const parts = cleanText.split(/,\s*(?:and\s+)?|\s+and\s+/i);
+  return parts.map(s => s.trim()).filter(Boolean);
+};
+
 export const OffersPage: React.FC<OffersPageProps> = ({ onClaimOffer }) => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -215,6 +225,26 @@ export const OffersPage: React.FC<OffersPageProps> = ({ onClaimOffer }) => {
                         {offer.description}
                       </p>
                     )}
+
+                    {/* Services Bullet List */}
+                    {(() => {
+                      const services = parseServices(offer.description);
+                      if (services.length === 0) return null;
+                      return (
+                        <div className="space-y-2 pt-1">
+                          <span className="text-[9px] font-mono tracking-widest text-gold-400 uppercase block">
+                            Included Services
+                          </span>
+                          <ul className="text-[11px] text-gray-300 space-y-1.5 pl-4 list-disc marker:text-gold-400/70">
+                            {services.map((svc, i) => (
+                              <li key={i} className="leading-tight font-sans text-gray-300/90 group-hover:text-white transition-colors duration-300">
+                                {svc}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })()}
 
                     {/* Pricing */}
                     {(offer.discounted_price || offer.original_price) && (
