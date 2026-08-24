@@ -8,6 +8,7 @@ interface Offer {
   title: string;
   subtitle: string | null;
   description: string | null;
+  services?: string | null;
   badge: string | null;
   icon: string | null;
   original_price: number | null;
@@ -228,7 +229,12 @@ export const OffersPage: React.FC<OffersPageProps> = ({ onClaimOffer }) => {
 
                     {/* Services Bullet List */}
                     {(() => {
-                      const services = parseServices(offer.description);
+                      let services: string[] = [];
+                      if (offer.services) {
+                        services = offer.services.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                      } else {
+                        services = parseServices(offer.description);
+                      }
                       if (services.length === 0) return null;
                       return (
                         <div className="space-y-2 pt-1">

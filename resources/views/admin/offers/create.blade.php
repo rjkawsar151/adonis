@@ -24,6 +24,10 @@
             <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Description</label>
             <textarea name="description" rows="3" placeholder="What's included in this offer..." class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C] resize-none">{{ old('description') }}</textarea>
         </div>
+        <div class="md:col-span-2">
+            <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Included Services (one per line)</label>
+            <textarea name="services" rows="4" placeholder="Enter services, one per line..." class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C] resize-y">{{ old('services') }}</textarea>
+        </div>
         <div>
             <label class="block text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1.5">Icon (Lucide)</label>
             <select name="icon" class="w-full bg-[#0c0f15] text-white text-sm border border-gray-700 px-4 py-2.5 focus:outline-none focus:border-[#C9A84C]">
